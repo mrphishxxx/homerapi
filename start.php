@@ -2,45 +2,28 @@
 
 date_default_timezone_set('Europe/Berlin');
 
-$api = $_GET['api'];
+$path = $_SERVER['PATH_INFO'];
+$params = explode('/', $path);
 
-switch ($api){
-	case 'login':
-		$email = $_POST['email'];
-		$pswd = $_POST['pswd'];
-		$pushtype = $_POST['type'];
-		$pushtoken = $_POST['dtoken'];
-		login($email, $pswd, $pushtype, $pushtoken);
+switch ($path){
+	case '/auth/login':
+		api_login();
 		break;
-	case 'register':
-		$email = $_POST['email'];
-		$pswd = $_POST['pswd'];
-		register($email, $pswd);
+	case '/auth/register':
+		api_register();
 		break;
-	case 'forgot-password':
-		$email = $_POST['email'];
-		reserve_reset($email);
+	case '/auth/forgot-password':
+		api_reserve_reset($email);
 		break;
-	case 'reset-password':
-		$email = $_POST['email'];
-		$code = $_POST['code'];
-		$newpass = $_POST['newpass'];
-		reset_password($email, $code, $newpass);
+	case '/auth/reset-password':
+		api_reset_password($email, $code, $newpass);
 		break;
-	case 'set-data':
-		$token = $_SERVER['Authorization'];
-		$y = $_POST['year'];
-		$m = $_POST['month'];
-		$d = $_POST['day'];
-		$data = $_POST['data'];
-		set_data($token, $y, $m, $d, $data);
-		break;
-	case 'get-data':
-		$token = $_SERVER['Authorization'];
-		$y = $_POST['year'];
-		$m = $_POST['month'];
-		$d = $_POST['day'];
-		get_data($token, $y, $m, $d);
+
+	default:
+		echo json_encode(array(
+			'success' => 'false',
+			'message' => 'Invalid API: ' . $path,
+			));
 		break;
 }
 

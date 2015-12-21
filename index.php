@@ -4,6 +4,8 @@ require 'vendor/autoload.php';
 
 require 'config/database.php';
 
+require 'helper.php';
+
 require 'api.php';
 
 require 'functions.php';

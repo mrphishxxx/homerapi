@@ -1,40 +1,61 @@
 <?php
 
-
-function time_elapsed_string($ptime)
-{
-    $etime = time() - $ptime;
-
-    if ($etime < 1)
-    {
-        return '0 seconds';
-    }
-
-    $a = array( 365 * 24 * 60 * 60  =>  'year',
-                 30 * 24 * 60 * 60  =>  'month',
-                      24 * 60 * 60  =>  'day',
-                           60 * 60  =>  'hour',
-                                60  =>  'minute',
-                                 1  =>  'second'
-                );
-    $a_plural = array( 'year'   => 'years',
-                       'month'  => 'months',
-                       'day'    => 'days',
-                       'hour'   => 'hours',
-                       'minute' => 'minutes',
-                       'second' => 'seconds'
-                );
-
-    foreach ($a as $secs => $str)
-    {
-        $d = $etime / $secs;
-        if ($d >= 1)
-        {
-            $r = round($d);
-            return $r . ' ' . ($r > 1 ? $a_plural[$str] : $str) . ' ago';
-        }
-    }
+function __login($email, $pswd, $type, $dtoken){
+  $user = User::where('email', 'like', $email)->where('password', md5($pswd . $email))->first();
+  if ($user != NULL){
+    $login = new Login;
+    $login->push_type = $type;
+    $login->push_token = $dtoken;
+    $login->token = md5($email . date('Y-m-d'));
+    $user->logins()->save($login);
+  }
+  return $user;
 }
 
+function __register($full_name, $email, $pswd){
+  $user = User::where('email', 'like', $email)->first();
+  if ($user == NULL){
+    $user = new User;
+    $user->full_name = $full_name;
+    $user->email = $email;
+    $user->password = md5($pswd . $email);
+    $user->avatar = '/images/avatars/default.png';
+    $user->save();
+    
+    return true;
+  } else{
+    return false;
+  }
+}
 
+function __reserve_reset($email){
+  $user = User::where('email', 'like', $email)->first();
+  $result = array();
+  if ($user == NULL){
+    return false;
+  } else{
+    $user->password_reset = substr(md5($email . date('Y-m-d')), 0, 4);
+    $user->save();
+    $msg = "We've received your request for password reset. <br/> Please remember the code below and use it in your app for password reset verification.<br> Code : " . $user->password_reset;
+    
+    sendEmail($user->email, 'Password Reset', $msg);
+    return false;
+  }
+}
+
+function __reset_password($email, $code, $newpass){
+  if ($code != 'NONE'){
+    $user = User::where('email', 'like', $email)->where('password_reset', $code)->first();
+    $result = array();
+    if ($user == NULL){
+      return false;
+    } else{
+      $user->password = md5($newpass . $email);
+      $user->password_reset = 'NONE';
+      $user->save();
+      return true;
+    }
+  }
+  return false;
+}
 ?>

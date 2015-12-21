@@ -1,4 +1,4 @@
 RewriteEngine On
 RewriteRule .? - [E=Authorization:%{HTTP:Authorization}]
 RewriteCond $1 !^(index\.php|apidoc)
-RewriteRule ^(.*)$ index.php?api=$1 [L]
+RewriteRule ^(.*)$ index.php/$1 [L]

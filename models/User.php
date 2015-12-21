@@ -11,6 +11,10 @@ class User extends Eloquent{
 		return $this->hasMany('Record', 'user_id');
 	}
 
+	public function logins(){
+		return $this->hasMany('Login', 'user_id');
+	}
+
 }
 
 ?>

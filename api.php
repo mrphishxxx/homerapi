@@ -380,8 +380,9 @@ function api_get_own_post_detail(){
 					'message' => 'No such post',
 					);
 			} else{
-				$matchings = $post->matchingPosts + $post->matchedPosts;
-				$similars = $post->similarFrom + $post->similarTo;
+				$dist = 'CoordinateDistanceKM(lat, lng, ' . $post->lat . ', ' . $post->lng . ')';
+				$matchings = $post->matchingPosts()->whereRaw($dist)->orderByRaw($dist, 'asc')->limit(100);// + $post->matchedPosts;
+				$similars = $post->similarFrom()->whereRaw($dist)->orderByRaw($dist, 'asc')->limit(100);// + $post->similarTo;
 
 				$seenPosts = $user->viewedPosts;
 				$seenIds = array();
@@ -477,8 +478,9 @@ function api_get_post_detail(){
 					'message' => 'No such post',
 					);
 			} else{
-				$matchings = $post->matchingPosts;// + $post->matchedPosts;
-				$similars = $post->similarFrom;// + $post->similarTo;
+				$dist = 'CoordinateDistanceKM(lat, lng, ' . $post->lat . ', ' . $post->lng . ')';
+				$matchings = $post->matchingPosts()->whereRaw($dist)->orderByRaw($dist, 'asc')->limit(100);// + $post->matchedPosts;
+				$similars = $post->similarFrom()->whereRaw($dist)->orderByRaw($dist, 'asc')->limit(100);// + $post->similarTo;
 
 				$marray = array();
 				$sarray = array();

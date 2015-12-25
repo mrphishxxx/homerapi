@@ -7,7 +7,7 @@ class Post extends Eloquent{
 	
 	use SoftDeletes;
 	
-	protected $hidden = ['id', 'user_id'];
+	protected $hidden = ['matchedPosts', 'matchingPosts', 'similarTo', 'similarFrom'];
 
 	protected $appends = ['post_time'];
 
@@ -20,6 +20,22 @@ class Post extends Eloquent{
 			return time_elapsed_string($this->created_at);
 		}
 		return '';
+	}
+
+	public function matchedPosts(){
+		return $this->belongsToMany('Post', 'matchingposts', 'post_from', 'post_to');
+	}
+
+	public function matchingPosts(){
+		return $this->belongsToMany('Post', 'matchingposts', 'post_to', 'post_from');
+	}
+
+	public function similarTo(){
+		return $this->belongsToMany('Post', 'similarposts', 'post_from', 'post_to');
+	}
+
+	public function similarFrom(){
+		return $this->belongsToMany('Post', 'similarposts', 'post_to', 'post_from');
 	}
 
 }

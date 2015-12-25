@@ -7,5 +7,8 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'User' => $baseDir . '/models/User.php',
-    'Record' => $baseDir . '/models/Record.php',
+    'Post' => $baseDir . '/models/Post.php',
+    'Login' => $baseDir . '/models/Login.php',
+    'SimilarPost' => $baseDir . '/models/SimilarPost.php',
+    'MatchingPost' => $baseDir . '/models/MatchingPost.php',
 );

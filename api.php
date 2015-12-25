@@ -24,9 +24,79 @@ function api_login(){
 		} else {
 			$result['success'] = 'true';
 			$result['message'] = 'Successfully logged in.';
-			$result['token'] = $user->login_token;
-			$result['avatar'] = $user->avatar;
-			$result['full_name'] = $user->full_name;
+			$result['data']['token'] = $user->login_token;
+			$result['data']['avatar'] = $user->avatar;
+			$result['data']['full_name'] = $user->full_name;
+		}
+	}
+	echo json_encode($result);
+}
+
+/**
+ * @api {post} /auth/login Login with push notification parameter
+ * @apiName Login
+ * @apiGroup Auth
+ * 
+ * @apiParam {String} full_name User's full name.
+ * @apiParam {String} email User Email.
+ * @apiParam {String} pswd User Password.
+ * @apiParam {Number} push_type Device type for push notification. 1 : iOS, 2 : Android.
+ * @apiParam {String} push_token Device token for push notification.
+ * @apiParam {String} facebook_id Facebook Id
+*/
+
+function api_login_facebook(){
+	$params = ['full_name', 'email', 'pswd', 'push_type', 'push_token', 'facebook_id'];
+	$result = validateParam($params);
+
+	if ($result === true){
+		extract($_POST);
+		$user = __login_facebook($email, $pswd, $push_type, $push_token, $facebook_id);
+		$result = array();
+		if ($user == NULL){
+			$result['success'] = 'false';
+			$result['message'] = 'No such user';
+		} else {
+			$result['success'] = 'true';
+			$result['message'] = 'Successfully logged in.';
+			$result['data']['token'] = $user->login_token;
+			$result['data']['avatar'] = $user->avatar;
+			$result['data']['full_name'] = $user->full_name;
+		}
+	}
+	echo json_encode($result);
+}
+
+/**
+ * @api {post} /auth/login Login with push notification parameter
+ * @apiName Login
+ * @apiGroup Auth
+ * 
+ * @apiParam {String} full_name User's full name.
+ * @apiParam {String} email User Email.
+ * @apiParam {String} pswd User Password.
+ * @apiParam {Number} push_type Device type for push notification. 1 : iOS, 2 : Android.
+ * @apiParam {String} push_token Device token for push notification.
+ * @apiParam {String} google_id Google ID
+*/
+
+function api_login_google(){
+	$params = ['full_name', 'email', 'pswd', 'push_type', 'push_token', 'google_id'];
+	$result = validateParam($params);
+
+	if ($result === true){
+		extract($_POST);
+		$user = __login_google($email, $pswd, $push_type, $push_token, $google_id);
+		$result = array();
+		if ($user == NULL){
+			$result['success'] = 'false';
+			$result['message'] = 'No such user';
+		} else {
+			$result['success'] = 'true';
+			$result['message'] = 'Successfully logged in.';
+			$result['data']['token'] = $user->login_token;
+			$result['data']['avatar'] = $user->avatar;
+			$result['data']['full_name'] = $user->full_name;
 		}
 	}
 	echo json_encode($result);
@@ -61,19 +131,16 @@ function api_register(){
 			} else{
 				$result['message'] = 'Successfully registered.';
 				$result['success'] = 'true';
-				$result['token'] = $user->login_token;
-				$result['avatar'] = $user->avatar;
-				$result['full_name'] = $user->full_name;
+				$result['data']['token'] = $user->login_token;
+				$result['data']['avatar'] = $user->avatar;
+				$result['data']['full_name'] = $user->full_name;
 			}
 		} else{
 			$result['message'] = 'This email is already used.';
 			$result['success'] = 'false';
 		}
-	} else{
-		$result['token'] = $user->login_token;
-		$result['avatar'] = $user->avatar;
-		$result['full_name'] = $user->full_name;
 	}
+
 	echo json_encode($result);
 }
 
@@ -118,13 +185,13 @@ function api_reset_password(){
 	$result = validateParam($params);
 
 	if ($result === true){
-		
+		extract($_POST);
 		if (__password_reset($email, $code, $newpass)){
 			$user = __login($email, $newpass);
 			if ($user != NULL){
-				$result['token'] = $user->login_token;
-				$result['avatar'] = $user->avatar;
-				$result['full_name'] = $user->full_name;
+				$result['data']['token'] = $user->login_token;
+				$result['data']['avatar'] = $user->avatar;
+				$result['data']['full_name'] = $user->full_name;
 				$result['success'] = 'true';
     			$result['message'] = 'Password has been reset';
 			} else{
@@ -138,6 +205,551 @@ function api_reset_password(){
 	}
 	echo json_encode($result);
 }
+
+/**
+ * @api {post} /post/add Add Post
+ * @apiName AddPost
+ * @apiGroup Post
+ * 
+ * @apiHeader {String} Authorization Users unique access-key.
+ * @apiParam {String} post_type "need" or "has"
+ * @apiParam {String} property_type either of "apartment", "house", "penthouse", etc...
+ * @apiParam {String} location Google location string
+ * @apiParam {Number} num_rooms Number of rooms
+ * @apiParam {Number} area area
+ * @apiParam {Number} price Price
+ * @apiParam {String} description Description
+*/
+function api_add_post(){
+	$params = ['post_type', 'property_type', 'location', 'num_rooms', 'area', 'price', 'description'];
+	$result = validateParam($params);
+
+	if ($result === true){
+		$token = $_SERVER['Authorization'];
+		$user = __get_user_from_token($token);
+		extract($_POST);
+		if ($user == NULL){
+			$result = array(
+				'success' => 'false',
+				'message' => 'Invalid token',
+				);
+		} else{
+			$post = __add_post($post_type, $property_type, $location, $num_rooms, $area, $price, $description);
+			$result = array(
+				'success' => 'true',
+				'message' => 'Successfully posted'
+				);
+			$result['data']['post_id'] = $post->id;
+		}
+	}
+	echo json_encode($result);
+}
+
+
+/**
+ * @api {post} /post/get-own Get Own Post
+ * @apiName GetOwnPosts
+ * @apiGroup Post
+ * 
+ * @apiHeader {String} Authorization Users unique access-key.
+*/
+function api_get_own_posts(){
+	$token = $_SERVER['Authorization'];
+	$user = __get_user_from_token($token);
+	if ($user == NULL){
+		$result = array(
+			'success' => 'false',
+			'message' => 'Invalid token',
+			);
+	} else{
+		$posts = $user->posts()->orderBy('id', 'desc');
+		$seenPosts = $user->viewedPosts;
+		$seenIds = array();
+		$totalMatch = 0;
+		foreach ($seenPosts as $p){
+			$seenIds[] = $p->id;
+		}
+
+		$rposts = array();
+		foreach ($posts as $post){
+			$matches = $post->matchedPosts()->whereNotIn('id', $seenIds)->count() + $post->matchingPosts()->whereNotIn('id', $seenIds)->count();
+			$totalMatch += $matches;
+			$rpost = array(
+				'post_id' => $post->id,
+				'post_type' => $post->post_type,
+				'property_type' => $post->property_type,
+				'location' => $post->location,
+				'lat' => $post->lat,
+				'lng' => $post->lng,
+				'num_rooms' => $post->num_rooms,
+				'area' => $post->area,
+				'price' => $post->price,
+				'description' => $post->description,
+				'post_date' => $post->post_time,
+				'num_new_match' => $matches,
+				);
+			$rposts[] = $rpost;
+		}
+
+		$result = array(
+			'success' => 'true',
+			'message' => 'Successfully fetched'
+			);
+
+		$result['data']['total_num_new_match'] = $totalMatch;
+		$result['data']['posts'] = $rposts;
+	}
+	echo json_encode($result);
+}
+
+/**
+ * @api {post} /post/get-all Get Own Post
+ * @apiName GetAllPosts
+ * @apiGroup Post
+ * 
+ * @apiHeader {String} Authorization Users unique access-key.
+*/
+function api_get_all_posts(){
+	$token = $_SERVER['Authorization'];
+	$user = __get_user_from_token($token);
+	if ($user == NULL){
+		$result = array(
+			'success' => 'false',
+			'message' => 'Invalid token',
+			);
+	} else{
+		$posts = Post::orderBy('id', 'desc');
+
+		foreach ($posts as $post){
+			$rpost = array(
+				'post_id' => $post->id,
+				'post_type' => $post->post_type,
+				'property_type' => $post->property_type,
+				'location' => $post->location,
+				'lat' => $post->lat,
+				'lng' => $post->lng,
+				'num_rooms' => $post->num_rooms,
+				'area' => $post->area,
+				'price' => $post->price,
+				'description' => $post->description,
+				'post_date' => $post->post_time,
+				'agent_id' => $post->user->id,
+				'agent_name' => $post->user->full_name,
+				'quickblox_id' => $post->user->quickblox_id,
+				);
+			$rposts[] = $rpost;
+		}
+
+		$result = array(
+			'success' => 'true',
+			'message' => 'Successfully fetched',
+			'data' => array(
+				'posts' => $rposts,
+				),
+			);
+	}
+	echo json_encode($result);
+}
+
+/**
+ * @api {post} /post/get-own-detail Get Own Post
+ * @apiName GetOwnPostDetail
+ * @apiGroup Post
+ * 
+ * @apiHeader {String} Authorization Users unique access-key.
+ * @apiParam {Number} post_id Post ID
+*/
+function api_get_own_post_detail(){
+	$params = ['post_id'];
+	$result = validateParam($params);
+
+	if ($result === true){
+		$token = $_SERVER['Authorization'];
+		$user = __get_user_from_token($token);
+		extract($_POST);
+		if ($user == NULL){
+			$result = array(
+				'success' => 'false',
+				'message' => 'Invalid token',
+				);
+		} else{
+			$post = Post::find($post_id);
+			if ($post == NULL){
+				$result = array(
+					'success' => 'false',
+					'message' => 'No such post',
+					);
+			} else{
+				$matchings = $post->matchingPosts + $post->matchedPosts;
+				$similars = $post->similarFrom + $post->similarTo;
+
+				$seenPosts = $user->viewedPosts;
+				$seenIds = array();
+				foreach ($seenPosts as $p){
+					$seenIds[] = $p->id;
+				}
+
+				$marray = array();
+				$sarray = array();
+				foreach ($matchings as $post){
+					$m = array(
+						'post_id' => $post->id,
+						'image_avatar' => $post->user->avatar,
+						'agent_id' => $post->user->id,
+						'agent_name' => $post->user->full_name,
+						'quickblox_id' => $post->user->quickblox_id,
+						'location' => $post->location,
+						'lat' => $post->lat,
+						'lng' => $post->lng,
+						'num_rooms' => $post->num_rooms,
+						'area' => $post->area,
+						'price' => $post->price,
+						'description' => $post->description,
+						'post_date' => $post->post_time,
+						'is_new' => in_array($post->id, $seenIds),
+						);
+					$marray[] = $m;
+				}
+
+				foreach ($similars as $post) {
+					$s = array(
+						'post_id' => $post->id,
+						'image_avatar' => $post->user->avatar,
+						'agent_id' => $post->user->id,
+						'agent_name' => $post->user->full_name,
+						'quickblox_id' => $post->user->quickblox_id,
+						'location' => $post->location,
+						'lat' => $post->lat,
+						'lng' => $post->lng,
+						'num_rooms' => $post->num_rooms,
+						'area' => $post->area,
+						'price' => $post->price,
+						'description' => $post->description,
+						'post_date' => $post->post_time,
+						'is_new' => in_array($post->id, $seenIds),
+						);
+					$sarray[] = $s;
+				}
+
+				__view_post($user->id, $post->id);
+
+				$result = array(
+					'success' => 'true',
+					'message' => 'Successfully fetched',
+					'data' => array(
+						'matchings' => $marray,
+						'similars' => $sarray,
+						),
+					);
+			}
+		}
+	}
+
+	echo json_encode($result);
+}
+
+/**
+ * @api {post} /post/get-detail Get Post
+ * @apiName GetPostDetail
+ * @apiGroup Post
+ * 
+ * @apiHeader {String} Authorization Users unique access-key.
+ * @apiParam {Number} post_id Post ID
+*/
+function api_get_post_detail(){
+	$params = ['post_id'];
+	$result = validateParam($params);
+
+	if ($result === true){
+		$token = $_SERVER['Authorization'];
+		$user = __get_user_from_token($token);
+		extract($_POST);
+		if ($user == NULL){
+			$result = array(
+				'success' => 'false',
+				'message' => 'Invalid token',
+				);
+		} else{
+			$post = Post::find($post_id);
+			if ($post == NULL){
+				$result = array(
+					'success' => 'false',
+					'message' => 'No such post',
+					);
+			} else{
+				$matchings = $post->matchingPosts;// + $post->matchedPosts;
+				$similars = $post->similarFrom;// + $post->similarTo;
+
+				$marray = array();
+				$sarray = array();
+				foreach ($matchings as $post){
+					$m = array(
+						'post_id' => $post->id,
+						'image_avatar' => $post->user->avatar,
+						'agent_id' => $post->user->id,
+						'agent_name' => $post->user->full_name,
+						'quickblox_id' => $post->user->quickblox_id,
+						'location' => $post->location,
+						'lat' => $post->lat,
+						'lng' => $post->lng,
+						'num_rooms' => $post->num_rooms,
+						'area' => $post->area,
+						'price' => $post->price,
+						'description' => $post->description,
+						'post_date' => $post->post_time,
+						);
+					$marray[] = $m;
+				}
+
+				foreach ($similars as $post) {
+					$s = array(
+						'post_id' => $post->id,
+						'image_avatar' => $post->user->avatar,
+						'agent_id' => $post->user->id,
+						'agent_name' => $post->user->full_name,
+						'quickblox_id' => $post->user->quickblox_id,
+						'location' => $post->location,
+						'lat' => $post->lat,
+						'lng' => $post->lng,
+						'num_rooms' => $post->num_rooms,
+						'area' => $post->area,
+						'price' => $post->price,
+						'description' => $post->description,
+						'post_date' => $post->post_time,
+						);
+					$sarray[] = $s;
+				}
+
+				__view_post($user->id, $post->id);
+
+				$result = array(
+					'success' => 'true',
+					'message' => 'Successfully fetched',
+					'data' => array(
+						'matchings' => $marray,
+						'similars' => $sarray,
+						),
+					);
+			}
+		}
+	}
+
+	echo json_encode($result);
+}
+
+/**
+ * @api {post} /post/delete Delete Post
+ * @apiName DeletePost
+ * @apiGroup Post
+ * 
+ * @apiHeader {String} Authorization Users unique access-key.
+ * @apiParam {Number} post_id Post ID
+*/
+function api_delete_post(){
+	$params = ['post_id'];
+	$result = validateParam($params);
+
+	if ($result === true){
+		$token = $_SERVER['Authorization'];
+		$user = __get_user_from_token($token);
+		extract($_POST);
+		if ($user == NULL){
+			$result = array(
+				'success' => 'false',
+				'message' => 'Invalid token',
+				);
+		} else{
+			$post = Post::find($post_id);
+			if ($post == NULL){
+				$result = array(
+					'success' => 'false',
+					'message' => 'No such post',
+					);
+			} else{
+				$post->delete();
+				$result = array(
+					'success' => 'true',
+					'message' => 'Successfully deleted',
+					);
+			}
+		}
+	}
+	echo json_encode($result);
+}
+
+/**
+ * @api {post} /post/edit Edit Post
+ * @apiName EditPost
+ * @apiGroup Post
+ * 
+ * @apiHeader {String} Authorization Users unique access-key.
+ * @apiParam {Number} post_id Post ID
+*/
+function api_edit_post(){
+	$params = ['post_id', 'post_type', 'property_type', 'location', 'num_rooms', 'area', 'price', 'description'];
+	$result = validateParam($params);
+
+	if ($result === true){
+		$token = $_SERVER['Authorization'];
+		$user = __get_user_from_token($token);
+		extract($_POST);
+		if ($user == NULL){
+			$result = array(
+				'success' => 'false',
+				'message' => 'Invalid token',
+				);
+		} else{
+			$post = Post::find($post_id);
+			if ($post == NULL){
+				$result = array(
+					'success' => 'false',
+					'message' => 'No such post',
+					);
+			} else{
+				__edit_post($user->id, $post_id, $post_type, $property_type, $location, $num_rooms, $area, $price, $description);
+
+				$result = array(
+					'success' => 'true',
+					'message' => 'Successfully deleted',
+					);
+			}
+		}
+	}
+	echo json_encode($result);
+}
+
+/**
+ * @api {post} /user/get-mine Get My Profile
+ * @apiName GetMyProfile
+ * @apiGroup User
+ * 
+ * @apiHeader {String} Authorization Users unique access-key.
+*/
+function api_get_my_profile(){
+	$token = $_SERVER['Authorization'];
+	$user = __get_user_from_token($token);
+	$result = array();
+	if ($user == NULL){
+		$result = array(
+			'success' => 'false',
+			'message' => 'Invalid Token',
+			);
+	} else{
+		$result = array(
+			'success' => 'true',
+			'message' => 'Successfully fetched user profile',
+			'data' => array(
+				'name' => $user->full_name,
+				'email_verified' => $user->email_verified,
+				'phone_verified' => $user->phone_verified,
+				'creci_verified' => $user->creci_verified,
+				'score' => $user->ratings()->avg('score'),
+				)
+			);
+	}
+	echo json_encode($result);
+}
+
+/**
+ * @api {post} /user/get Get User Profile
+ * @apiName GetUserProfile
+ * @apiGroup User
+ * 
+ * @apiHeader {String} Authorization Users unique access-key.
+*/
+function api_get_user_profile(){
+	$params = ['agent_id', 'score'];
+	$result = validateParam($params);
+
+	if ($result === true){
+		$token = $_SERVER['Authorization'];
+		$user = __get_user_from_token($token);
+		$result = array();
+		if ($user == NULL){
+			$result = array(
+				'success' => 'false',
+				'message' => 'Invalid Token',
+				);
+		} else{
+			$user = User::find($agent_id);
+			if ($user == NULL){
+				$result = array(
+					'success' => 'false',
+					'message' => 'No such user',
+					);
+			} else{
+				$result = array(
+					'success' => 'true',
+					'message' => 'Successfully fetched user profile',
+					'data' => array(
+						'name' => $user->full_name,
+						'email_verified' => $user->email_verified,
+						'phone_verified' => $user->phone_verified,
+						'creci_verified' => $user->creci_verified,
+						'score' => $user->ratings()->avg('score'),
+						)
+					);
+			}
+		}
+	}
+	echo json_encode($result);
+}
+
+/**
+ * @api {post} /user/rate Rate User
+ * @apiName RateUser
+ * @apiGroup User
+ * 
+ * @apiHeader {String} Authorization Users unique access-key.
+ * @apiParam {Number} post_id Post ID
+*/
+function api_rate_user(){
+	$params = ['agent_id', 'score'];
+	$result = validateParam($params);
+
+	if ($result === true){
+		$token = $_SERVER['Authorization'];
+		$user = __get_user_from_token($token);
+		extract($_POST);
+		if ($user == NULL){
+			$result = array(
+				'success' => 'false',
+				'message' => 'Invalid token',
+				);
+		} else{
+			if ($agent_id == $user->id){
+				$result = array(
+					'success' => 'false',
+					'message' => "You can't rate yourself"
+					);
+			} else{
+				$tuser = User::find($agent_id);
+				if ($tuser == NULL){
+					$result = array(
+						'success' => 'false',
+						'message' => 'No such user',
+						);
+				} else{
+					if ($tuser->ratings()->where('user_from', $user->id)->count > 0){
+						$result = array(
+							'success' => 'false',
+							'message' => "You've already rated this user"
+						);
+					} else{
+						__rate_user($user->id, $tuser->id, $score);
+						$result = array(
+							'success' => 'true',
+							'message' => "Successfully rated",
+							);
+					}
+				}
+			}
+		}
+	}
+
+	echo json_encode($result);
+}
+
 
 
 ?>

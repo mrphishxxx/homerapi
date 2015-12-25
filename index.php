@@ -2,6 +2,8 @@
 
 require 'vendor/autoload.php';
 
+require 'config/constants.php';
+
 require 'config/database.php';
 
 require 'helper.php';

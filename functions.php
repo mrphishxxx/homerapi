@@ -68,7 +68,7 @@ function __register($full_name, $email, $pswd, $facebook=NULL, $google=NULL){
     $user->save();
 
     $token = qbGenerateSession();
-    qbSignupUser($token, $login, $email, QB_USER_PASS);
+    qbSignupUser($token, '', $email, QB_USER_PASS);
     
     return true;
   } else{

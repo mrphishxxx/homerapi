@@ -24,7 +24,7 @@ function api_login(){
 		} else {
 			$result['success'] = 'true';
 			$result['message'] = 'Successfully logged in.';
-			$result['data']['token'] = $user->login_token;
+			$result['data']['token'] = $user->logins()->first()->token;
 			$result['data']['avatar'] = $user->avatar;
 			$result['data']['full_name'] = $user->full_name;
 		}
@@ -131,7 +131,7 @@ function api_register(){
 			} else{
 				$result['message'] = 'Successfully registered.';
 				$result['success'] = 'true';
-				$result['data']['token'] = $user->login_token;
+				$result['data']['token'] = $user->logins()->first()->token;
 				$result['data']['avatar'] = $user->avatar;
 				$result['data']['full_name'] = $user->full_name;
 			}

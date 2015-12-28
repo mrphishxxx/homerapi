@@ -3,6 +3,7 @@
 function __login($email, $pswd, $type, $dtoken){
   $user = User::where('email', 'like', $email)->where('password', md5($pswd . $email))->first();
   if ($user != NULL){
+    Login::where('user_id', $user->id)->delete();
     $login = new Login;
     $login->push_type = $type;
     $login->push_token = $dtoken;
@@ -21,6 +22,7 @@ function __login_facebook($full_name, $email, $type, $dtoken, $facebook_id){
       $user->facebook_id = $facebook_id;
       $user->save();
 
+      Login::where('user_id', $user->id)->delete();
       $login = new Login;
       $login->push_type = $type;
       $login->push_token = $dtoken;
@@ -40,6 +42,7 @@ function __login_google($full_name, $email, $type, $dtoken, $google_id){
       $user->google_id = $google_id;
       $user->save();
 
+      Login::where('user_id', $user->id)->delete();
       $login = new Login;
       $login->push_type = $type;
       $login->push_token = $dtoken;

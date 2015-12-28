@@ -1,6 +1,7 @@
 {
     "require": {
-        "illuminate/database": "^5.1"
+        "illuminate/database": "^5.1",
+        "richsage/rms-push-notifications-bundle": "dev-master"
     },
     "autoload": {
     	"classmap": [

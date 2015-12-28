@@ -6,9 +6,10 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'User' => $baseDir . '/models/User.php',
-    'Post' => $baseDir . '/models/Post.php',
     'Login' => $baseDir . '/models/Login.php',
-    'SimilarPost' => $baseDir . '/models/SimilarPost.php',
     'MatchingPost' => $baseDir . '/models/MatchingPost.php',
+    'Post' => $baseDir . '/models/Post.php',
+    'SimilarPost' => $baseDir . '/models/SimilarPost.php',
+    'User' => $baseDir . '/models/User.php',
+    'UserRating' => $baseDir . '/models/UserRating.php',
 );

@@ -6,5 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'RMS\\PushNotificationsBundle' => array($vendorDir . '/richsage/rms-push-notifications-bundle'),
     'Doctrine\\Common\\Inflector\\' => array($vendorDir . '/doctrine/inflector/lib'),
+    'Buzz' => array($vendorDir . '/kriswallsmith/buzz/lib'),
 );

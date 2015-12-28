@@ -124,7 +124,7 @@ function qbSignupUser($token, $login, $email, $password) {
 
 	$ch = curl_init();
 
-	curl_setopt($ch, CURLOPT_URL, 'https://api.quickblox.com/auth.json'); // Full path is - https://api.quickblox.com/auth.json
+	curl_setopt($ch, CURLOPT_URL, 'https://api.quickblox.com/users.json'); // Full path is - https://api.quickblox.com/users.json
 	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
 	curl_setopt($ch, CURLOPT_POSTFIELDS, $request);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

@@ -65,11 +65,12 @@ function __register($full_name, $email, $pswd, $facebook=NULL, $google=NULL){
     $user->email_verified = 0;
     $user->phone_verified = 0;
     $user->creci_verified = 0;
-    $user->save();
 
     $token = qbGenerateSession();
-    qbSignupUser($token, '', $email, QB_USER_PASS);
+    $user->quickblox_id = qbSignupUser($token, '', $email, QB_USER_PASS)->id;
     
+    $user->save();
+
     return true;
   } else{
     return false;

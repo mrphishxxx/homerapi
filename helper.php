@@ -99,8 +99,8 @@ function qbGenerateSession() {
 	$token = null;
 
 	try {
-		$this->authInfo = json_decode($response);
-		$token = $this->authInfo->session->token;
+		$authInfo = json_decode($response);
+		$token = $authInfo->session->token;
 	}
 	catch (Exception $e) {
 		curl_close($curl);

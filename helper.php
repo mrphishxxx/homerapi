@@ -87,7 +87,7 @@ function qbGenerateSession() {
 
 	// Configure cURL
 	$curl = curl_init();
-	curl_setopt($curl, CURLOPT_URL, QB_API_ENDPOINT . '/' . QB_PATH_AUTH); // Full path is - https://api.quickblox.com/auth.json
+	curl_setopt($curl, CURLOPT_URL, 'https://api.quickblox.com/auth.json'); // Full path is - https://api.quickblox.com/auth.json
 	curl_setopt($curl, CURLOPT_POST, true); // Use POST
 	curl_setopt($curl, CURLOPT_POSTFIELDS, $post_body); // Setup post body
 	curl_setopt($curl, CURLOPT_RETURNTRANSFER, true); // Receive server response
@@ -124,7 +124,7 @@ function qbSignupUser($token, $login, $email, $password) {
 
 	$ch = curl_init();
 
-	curl_setopt($ch, CURLOPT_URL, QB_API_ENDPOINT . '/' . QB_PATH_USER); // Full path is - https://api.quickblox.com/auth.json
+	curl_setopt($ch, CURLOPT_URL, 'https://api.quickblox.com/auth.json'); // Full path is - https://api.quickblox.com/auth.json
 	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
 	curl_setopt($ch, CURLOPT_POSTFIELDS, $request);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

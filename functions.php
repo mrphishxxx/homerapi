@@ -56,7 +56,7 @@ function __register($full_name, $email, $pswd, $facebook=NULL, $google=NULL){
     $user = new User;
     $user->full_name = $full_name;
     $user->email = $email;
-    if ($password != NULL){
+    if ($pswd != NULL){
       $user->password = md5($pswd . $email);
     }
     $user->avatar = '/images/avatars/default.png';

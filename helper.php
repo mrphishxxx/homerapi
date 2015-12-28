@@ -149,8 +149,7 @@ function qbSignupUser($token, $login, $email, $password) {
 		$error = $resp->errors;
 
 		if ($error) {
-			$this->latestErr = json_encode($error);
-		return null;
+			return null;
 		}
 
 

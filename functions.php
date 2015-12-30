@@ -168,7 +168,7 @@ function __rate_user($fromid, $toid, $score){
 
 
 function __get_user_from_token($token){
-  $login = Login::where('token')->first();
+  $login = Login::where('token', $token)->first();
   if ($login == NULL)
     return NULL;
   return $login->user;

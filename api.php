@@ -231,7 +231,7 @@ function api_add_post(){
 		if ($user == NULL){
 			$result = array(
 				'success' => 'false',
-				'message' => 'Invalid token',
+				'message' => 'Invalid token ' . $token,
 				);
 		} else{
 			$post = __add_post($post_type, $property_type, $location, $num_rooms, $area, $price, $description);
@@ -259,7 +259,7 @@ function api_get_own_posts(){
 	if ($user == NULL){
 		$result = array(
 			'success' => 'false',
-			'message' => 'Invalid token',
+			'message' => 'Invalid token ' . $token,
 			);
 	} else{
 		$posts = $user->posts()->orderBy('id', 'desc');

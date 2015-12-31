@@ -234,7 +234,7 @@ function api_add_post(){
 				'message' => 'Invalid token ' . $token,
 				);
 		} else{
-			$post = __add_post($post_type, $property_type, $location, $num_rooms, $area, $price, $description);
+			$post = __add_post($user->id, $post_type, $property_type, $location, $num_rooms, $area, $price, $description);
 			$result = array(
 				'success' => 'true',
 				'message' => 'Successfully posted'

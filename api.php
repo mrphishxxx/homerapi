@@ -318,7 +318,7 @@ function api_get_all_posts(){
 			'message' => 'Invalid token',
 			);
 	} else{
-		$posts = Post::orderBy('id', 'desc');
+		$posts = Post::orderBy('id', 'desc')->get();
 
 		foreach ($posts as $post){
 			$rpost = array(
@@ -381,8 +381,8 @@ function api_get_own_post_detail(){
 					);
 			} else{
 				$dist = 'CoordinateDistanceKM(lat, lng, ' . $post->lat . ', ' . $post->lng . ')';
-				$matchings = $post->matchingPosts()->whereRaw($dist)->orderByRaw($dist, 'asc')->limit(100);// + $post->matchedPosts;
-				$similars = $post->similarFrom()->whereRaw($dist)->orderByRaw($dist, 'asc')->limit(100);// + $post->similarTo;
+				$matchings = $post->matchingPosts()->whereRaw($dist)->orderByRaw($dist, 'asc')->limit(100)->get();// + $post->matchedPosts;
+				$similars = $post->similarFrom()->whereRaw($dist)->orderByRaw($dist, 'asc')->limit(100)->get();// + $post->similarTo;
 
 				$seenPosts = $user->viewedPosts;
 				$seenIds = array();
@@ -479,8 +479,8 @@ function api_get_post_detail(){
 					);
 			} else{
 				$dist = 'CoordinateDistanceKM(lat, lng, ' . $post->lat . ', ' . $post->lng . ')';
-				$matchings = $post->matchingPosts()->whereRaw($dist)->orderByRaw($dist, 'asc')->limit(100);// + $post->matchedPosts;
-				$similars = $post->similarFrom()->whereRaw($dist)->orderByRaw($dist, 'asc')->limit(100);// + $post->similarTo;
+				$matchings = $post->matchingPosts()->whereRaw($dist)->orderByRaw($dist, 'asc')->limit(100)->get();// + $post->matchedPosts;
+				$similars = $post->similarFrom()->whereRaw($dist)->orderByRaw($dist, 'asc')->limit(100)->get();// + $post->similarTo;
 
 				$marray = array();
 				$sarray = array();

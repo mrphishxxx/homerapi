@@ -191,7 +191,7 @@ function __process_post($post){
                   ->where('post_type', $post->post_type)
                   ->get();
 
-  foreach ($similar as $s){
+  foreach ($similars as $s){
     $post->similarTo()->attach($s->id);
   }
 

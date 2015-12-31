@@ -196,7 +196,7 @@ function invalidApi(){
 		));
 }
 
-function sendGcmMessage($message){
+function sendGcmMessage($message, $devTokens){
 	// First, instantiate the manager.
 	//
 	// Example for production environment:
@@ -207,18 +207,16 @@ function sendGcmMessage($message){
 
 	// Then declare an adapter.
 	$gcmAdapter = new GcmAdapter(array(
-	    'apiKey' => 'YourApiKey',
+	    'apiKey' => DROID_API_KEY,
 	));
+
+	$devarray = array();
+	foreach ($devTokens as $dtoken){
+		$devarray[] = new Device($dtoken);
+	}
 
 	// Set the device(s) to push the notification to.
-	$devices = new DeviceCollection(array(
-	    new Device('Token1'),
-	    new Device('Token2'),
-	    new Device('Token3'),
-	));
-
-	// Then, create the push skel.
-	$message = new Message('This is an example.');
+	$devices = new DeviceCollection($devarray);
 
 	// Finally, create and add the push to the manager, and push it!
 	$push = new Push($gcmAdapter, $devices, $message);

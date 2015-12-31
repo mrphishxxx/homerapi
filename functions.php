@@ -202,12 +202,21 @@ function __process_post($post){
                   ->whereRaw('abs(' . $post->price . ' - price) <= ' . $priceRange)
                   ->where('num_rooms', '>=', $post->num_rooms)
                   ->where('post_type', $ptype)
+                  ->where('id', '<>', $post->id)
                   ->get();
   
+  $devices = array();
   foreach ($matchings as $m){
     $post->matchedPosts()->attach($m->id);
+    $user = $post->user;
+    foreach ($user->logins as $login){
+      if ($login->push_type == 2){
+        $devices[] = $login->push_token;
+      }
+    }
   }
-
+  $message = $post->user->full_name . ' has just posted that matches your post';
+  sendGcmMessage($message, $devices);
 }
 
 function __view_post($user_id, $post_id){

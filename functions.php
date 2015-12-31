@@ -186,7 +186,7 @@ function __process_post($post){
   $ptype = $post->post_type == 1 ? 0 : 1;
   $similars = Post::where('property_type', $post->property_type)
                   ->whereRaw('abs(' . $post->area . ' - area) <= ' . $areaRange)
-                  ->whereRaw('abs(' . $post->price . ' - property_type) <= ' . $price)
+                  ->whereRaw('abs(' . $post->price . ' - property_type) <= ' . $priceRange)
                   ->where('num_rooms', '>=', $post->num_rooms)
                   ->where('post_type', $post->post_type)
                   ->get();
@@ -198,7 +198,7 @@ function __process_post($post){
   // finding matchings
   $matchings = Post::where('property_type', $post->property_type)
                   ->whereRaw('abs(' . $post->area . ' - area) <= ' . $areaRange)
-                  ->whereRaw('abs(' . $post->price . ' - property_type) <= ' . $price)
+                  ->whereRaw('abs(' . $post->price . ' - property_type) <= ' . $priceRange)
                   ->where('num_rooms', '>=', $post->num_rooms)->get()
                   ->where('post_type', $ptype)
                   ->get();

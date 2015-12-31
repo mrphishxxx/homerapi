@@ -216,7 +216,7 @@ function __process_post($post){
     }
   }
   $message = $post->user->full_name . ' has just posted that matches your post';
-  sendGcmMessage($message, $devices);
+  //sendGcmMessage($message, $devices);
 }
 
 function __view_post($user_id, $post_id){

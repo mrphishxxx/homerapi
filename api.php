@@ -1,6 +1,7 @@
 <?php
 /**
  * @api {post} /auth/login Login with push notification parameter
+ * @apiVersion 1.0.0
  * @apiName Login
  * @apiGroup Auth
  * 
@@ -34,6 +35,7 @@ function api_login(){
 
 /**
  * @api {post} /auth/login Login with push notification parameter
+ * @apiVersion 1.0.0
  * @apiName Login
  * @apiGroup Auth
  * 
@@ -69,6 +71,7 @@ function api_login_facebook(){
 
 /**
  * @api {post} /auth/login Login with push notification parameter
+ * @apiVersion 1.0.0
  * @apiName Login
  * @apiGroup Auth
  * 
@@ -104,6 +107,7 @@ function api_login_google(){
 
 /**
  * @api {post} /auth/register Register a user
+ * @apiVersion 1.0.0
  * @apiName Register
  * @apiGroup Auth
  * 
@@ -147,6 +151,7 @@ function api_register(){
 
 /**
  * @api {post} /auth/forgot-password Notify a user has forgotten password
+ * @apiVersion 1.0.0
  * @apiName ForgotPassword
  * @apiGroup Auth
  * 
@@ -171,6 +176,7 @@ function api_reserve_reset(){
 
 /**
  * @api {post} /auth/reset-password Reset Password
+ * @apiVersion 1.0.0
  * @apiName ResetPassword
  * @apiGroup Auth
  * 
@@ -208,11 +214,12 @@ function api_reset_password(){
 
 /**
  * @api {post} /post/add Add Post
+ * @apiVersion 1.0.0
  * @apiName AddPost
  * @apiGroup Post
  * 
  * @apiHeader {String} Authorization Users unique access-key.
- * @apiParam {String} post_type "need" or "has"
+ * @apiParam {String} post_type 1 : "need" or 2 : "has"
  * @apiParam {String} property_type either of "apartment", "house", "penthouse", etc...
  * @apiParam {String} location Google location string
  * @apiParam {Number} num_rooms Number of rooms
@@ -248,6 +255,7 @@ function api_add_post(){
 
 /**
  * @api {post} /post/get-own Get Own Post
+ * @apiVersion 1.0.0
  * @apiName GetOwnPosts
  * @apiGroup Post
  * 
@@ -304,6 +312,7 @@ function api_get_own_posts(){
 
 /**
  * @api {post} /post/get-all Get Own Post
+ * @apiVersion 1.0.0
  * @apiName GetAllPosts
  * @apiGroup Post
  * 
@@ -353,6 +362,7 @@ function api_get_all_posts(){
 
 /**
  * @api {post} /post/get-own-detail Get Own Post
+ * @apiVersion 1.0.0
  * @apiName GetOwnPostDetail
  * @apiGroup Post
  * 
@@ -451,6 +461,7 @@ function api_get_own_post_detail(){
 
 /**
  * @api {post} /post/get-detail Get Post
+ * @apiVersion 1.0.0
  * @apiName GetPostDetail
  * @apiGroup Post
  * 
@@ -541,6 +552,7 @@ function api_get_post_detail(){
 
 /**
  * @api {post} /post/delete Delete Post
+ * @apiVersion 1.0.0
  * @apiName DeletePost
  * @apiGroup Post
  * 
@@ -581,11 +593,19 @@ function api_delete_post(){
 
 /**
  * @api {post} /post/edit Edit Post
+ * @apiVersion 1.0.0
  * @apiName EditPost
  * @apiGroup Post
  * 
  * @apiHeader {String} Authorization Users unique access-key.
  * @apiParam {Number} post_id Post ID
+ * @apiParam {String} post_type 1 : "need" or 2 : "has"
+ * @apiParam {String} property_type either of "apartment", "house", "penthouse", etc...
+ * @apiParam {String} location Google location string
+ * @apiParam {Number} num_rooms Number of rooms
+ * @apiParam {Number} area area
+ * @apiParam {Number} price Price
+ * @apiParam {String} description Description
 */
 function api_edit_post(){
 	$params = ['post_id', 'post_type', 'property_type', 'location', 'num_rooms', 'area', 'price', 'description'];
@@ -622,6 +642,7 @@ function api_edit_post(){
 
 /**
  * @api {post} /user/get-mine Get My Profile
+ * @apiVersion 1.0.0
  * @apiName GetMyProfile
  * @apiGroup User
  * 
@@ -654,6 +675,7 @@ function api_get_my_profile(){
 
 /**
  * @api {post} /user/get Get User Profile
+ * @apiVersion 1.0.0
  * @apiName GetUserProfile
  * @apiGroup User
  * 
@@ -699,6 +721,7 @@ function api_get_user_profile(){
 
 /**
  * @api {post} /user/rate Rate User
+ * @apiVersion 1.0.0
  * @apiName RateUser
  * @apiGroup User
  * 

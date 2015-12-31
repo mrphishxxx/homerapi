@@ -3,6 +3,7 @@ define({ "api": [
     "type": "post",
     "url": "/auth/forgot-password",
     "title": "Notify a user has forgotten password",
+    "version": "1.0.0",
     "name": "ForgotPassword",
     "group": "Auth",
     "parameter": {
@@ -18,7 +19,6 @@ define({ "api": [
         ]
       }
     },
-    "version": "0.0.0",
     "filename": "./api.php",
     "groupTitle": "Auth"
   },
@@ -26,6 +26,7 @@ define({ "api": [
     "type": "post",
     "url": "/auth/login",
     "title": "Login with push notification parameter",
+    "version": "1.0.0",
     "name": "Login",
     "group": "Auth",
     "parameter": {
@@ -62,7 +63,6 @@ define({ "api": [
         ]
       }
     },
-    "version": "0.0.0",
     "filename": "./api.php",
     "groupTitle": "Auth"
   },
@@ -70,6 +70,7 @@ define({ "api": [
     "type": "post",
     "url": "/auth/login",
     "title": "Login with push notification parameter",
+    "version": "1.0.0",
     "name": "Login",
     "group": "Auth",
     "parameter": {
@@ -120,7 +121,6 @@ define({ "api": [
         ]
       }
     },
-    "version": "0.0.0",
     "filename": "./api.php",
     "groupTitle": "Auth"
   },
@@ -128,6 +128,7 @@ define({ "api": [
     "type": "post",
     "url": "/auth/login",
     "title": "Login with push notification parameter",
+    "version": "1.0.0",
     "name": "Login",
     "group": "Auth",
     "parameter": {
@@ -178,7 +179,6 @@ define({ "api": [
         ]
       }
     },
-    "version": "0.0.0",
     "filename": "./api.php",
     "groupTitle": "Auth"
   },
@@ -186,6 +186,7 @@ define({ "api": [
     "type": "post",
     "url": "/auth/register",
     "title": "Register a user",
+    "version": "1.0.0",
     "name": "Register",
     "group": "Auth",
     "parameter": {
@@ -229,7 +230,6 @@ define({ "api": [
         ]
       }
     },
-    "version": "0.0.0",
     "filename": "./api.php",
     "groupTitle": "Auth"
   },
@@ -237,6 +237,7 @@ define({ "api": [
     "type": "post",
     "url": "/auth/reset-password",
     "title": "Reset Password",
+    "version": "1.0.0",
     "name": "ResetPassword",
     "group": "Auth",
     "parameter": {
@@ -280,7 +281,6 @@ define({ "api": [
         ]
       }
     },
-    "version": "0.0.0",
     "filename": "./api.php",
     "groupTitle": "Auth"
   },
@@ -313,9 +313,38 @@ define({ "api": [
     "name": ""
   },
   {
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "optional": false,
+            "field": "varname1",
+            "description": "<p>No type.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "varname2",
+            "description": "<p>With type.</p>"
+          }
+        ]
+      }
+    },
+    "type": "",
+    "url": "",
+    "version": "0.0.0",
+    "filename": "./doc/main.js",
+    "group": "E__xampp_htdocs_homer_doc_main_js",
+    "groupTitle": "E__xampp_htdocs_homer_doc_main_js",
+    "name": ""
+  },
+  {
     "type": "post",
     "url": "/post/add",
     "title": "Add Post",
+    "version": "1.0.0",
     "name": "AddPost",
     "group": "Post",
     "header": {
@@ -339,7 +368,7 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "post_type",
-            "description": "<p>&quot;need&quot; or &quot;has&quot;</p>"
+            "description": "<p>1 : &quot;need&quot; or 2 : &quot;has&quot;</p>"
           },
           {
             "group": "Parameter",
@@ -386,7 +415,6 @@ define({ "api": [
         ]
       }
     },
-    "version": "0.0.0",
     "filename": "./api.php",
     "groupTitle": "Post"
   },
@@ -394,6 +422,7 @@ define({ "api": [
     "type": "post",
     "url": "/post/delete",
     "title": "Delete Post",
+    "version": "1.0.0",
     "name": "DeletePost",
     "group": "Post",
     "header": {
@@ -422,7 +451,6 @@ define({ "api": [
         ]
       }
     },
-    "version": "0.0.0",
     "filename": "./api.php",
     "groupTitle": "Post"
   },
@@ -430,6 +458,7 @@ define({ "api": [
     "type": "post",
     "url": "/post/edit",
     "title": "Edit Post",
+    "version": "1.0.0",
     "name": "EditPost",
     "group": "Post",
     "header": {
@@ -454,11 +483,59 @@ define({ "api": [
             "optional": false,
             "field": "post_id",
             "description": "<p>Post ID</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "post_type",
+            "description": "<p>1 : &quot;need&quot; or 2 : &quot;has&quot;</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "property_type",
+            "description": "<p>either of &quot;apartment&quot;, &quot;house&quot;, &quot;penthouse&quot;, etc...</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "location",
+            "description": "<p>Google location string</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "num_rooms",
+            "description": "<p>Number of rooms</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "area",
+            "description": "<p>area</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "price",
+            "description": "<p>Price</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "description",
+            "description": "<p>Description</p>"
           }
         ]
       }
     },
-    "version": "0.0.0",
     "filename": "./api.php",
     "groupTitle": "Post"
   },
@@ -466,6 +543,7 @@ define({ "api": [
     "type": "post",
     "url": "/post/get-all",
     "title": "Get Own Post",
+    "version": "1.0.0",
     "name": "GetAllPosts",
     "group": "Post",
     "header": {
@@ -481,7 +559,6 @@ define({ "api": [
         ]
       }
     },
-    "version": "0.0.0",
     "filename": "./api.php",
     "groupTitle": "Post"
   },
@@ -489,6 +566,7 @@ define({ "api": [
     "type": "post",
     "url": "/post/get-own-detail",
     "title": "Get Own Post",
+    "version": "1.0.0",
     "name": "GetOwnPostDetail",
     "group": "Post",
     "header": {
@@ -517,7 +595,6 @@ define({ "api": [
         ]
       }
     },
-    "version": "0.0.0",
     "filename": "./api.php",
     "groupTitle": "Post"
   },
@@ -525,6 +602,7 @@ define({ "api": [
     "type": "post",
     "url": "/post/get-own",
     "title": "Get Own Post",
+    "version": "1.0.0",
     "name": "GetOwnPosts",
     "group": "Post",
     "header": {
@@ -540,7 +618,6 @@ define({ "api": [
         ]
       }
     },
-    "version": "0.0.0",
     "filename": "./api.php",
     "groupTitle": "Post"
   },
@@ -548,6 +625,7 @@ define({ "api": [
     "type": "post",
     "url": "/post/get-detail",
     "title": "Get Post",
+    "version": "1.0.0",
     "name": "GetPostDetail",
     "group": "Post",
     "header": {
@@ -576,7 +654,6 @@ define({ "api": [
         ]
       }
     },
-    "version": "0.0.0",
     "filename": "./api.php",
     "groupTitle": "Post"
   },
@@ -584,6 +661,7 @@ define({ "api": [
     "type": "post",
     "url": "/user/get-mine",
     "title": "Get My Profile",
+    "version": "1.0.0",
     "name": "GetMyProfile",
     "group": "User",
     "header": {
@@ -599,7 +677,6 @@ define({ "api": [
         ]
       }
     },
-    "version": "0.0.0",
     "filename": "./api.php",
     "groupTitle": "User"
   },
@@ -607,6 +684,7 @@ define({ "api": [
     "type": "post",
     "url": "/user/get",
     "title": "Get User Profile",
+    "version": "1.0.0",
     "name": "GetUserProfile",
     "group": "User",
     "header": {
@@ -622,7 +700,6 @@ define({ "api": [
         ]
       }
     },
-    "version": "0.0.0",
     "filename": "./api.php",
     "groupTitle": "User"
   },
@@ -630,6 +707,7 @@ define({ "api": [
     "type": "post",
     "url": "/user/rate",
     "title": "Rate User",
+    "version": "1.0.0",
     "name": "RateUser",
     "group": "User",
     "header": {
@@ -658,7 +736,6 @@ define({ "api": [
         ]
       }
     },
-    "version": "0.0.0",
     "filename": "./api.php",
     "groupTitle": "User"
   }

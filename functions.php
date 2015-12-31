@@ -183,7 +183,7 @@ function __process_post($post){
 
   $areaRange = $post->area / 5;
   $priceRange = $post->price / 5;
-  $ptype = $post->post_type == 1 ? 0 : 1;
+  $ptype = $post->post_type == 1 ? 2 : 1;
   $similars = Post::where('property_type', $post->property_type)
                   ->whereRaw('abs(' . $post->area . ' - area) <= ' . $areaRange)
                   ->whereRaw('abs(' . $post->price . ' - price) <= ' . $priceRange)

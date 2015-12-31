@@ -10,6 +10,6 @@ define('DB_NAME', 'homerdbinstance');
 define('DB_USER', 'ivonemaster');
 define('DB_PASS', 'Ivone491409');
 
-define('DROID_API_KEY', '');
+define('DROID_API_KEY', 'AIzaSyD8hkAVuo5NiK3fDRiSJSmHdMXjiLXkynU');
 
 ?>

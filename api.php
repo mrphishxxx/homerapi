@@ -752,6 +752,21 @@ function api_rate_user(){
 	echo json_encode($result);
 }
 
+function api_test(){
+	$post = Post::find(3);
+	$areaRange = $post->area / 5;
+  	$priceRange = $post->price / 5;
+  	$ptype = $post->post_type == 1 ? 0 : 1;
 
+	$similars = Post::where('property_type', $post->property_type)
+                  ->whereRaw('abs(' . $post->area . ' - area) <= ' . $areaRange)
+                  ->whereRaw('abs(' . $post->price . ' - price) <= ' . $priceRange)
+                  ->where('num_rooms', '>=', $post->num_rooms)
+                  ->where('post_type', $post->post_type)
+                  ->where('id', '<>', $post->id)
+                  ->get();
+
+    echo json_encode($similars);
+}
 
 ?>

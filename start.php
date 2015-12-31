@@ -49,6 +49,9 @@ switch ($path){
 		break;
 	case '/user/rate':
 		break;
+	case '/test':
+		api_test();
+		break;
 	default:
 		echo json_encode(array(
 			'success' => 'false',

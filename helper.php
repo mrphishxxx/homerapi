@@ -10,6 +10,7 @@ use Sly\NotificationPusher\PushManager,
 
 function time_elapsed_string($ptime)
 {
+	$ptime = strtotime($ptime);
     $etime = time() - $ptime;
 
     if ($etime < 1)

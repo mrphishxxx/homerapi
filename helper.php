@@ -227,4 +227,46 @@ function sendGcmMessage($message, $devTokens){
 	$pushManager->push(); // Returns a collection of notified devices
 }
 
+function upload($image_category){
+	$result = array();
+	$path = "";
+	$valid_image_formats = array("jpg", "png", "gif", "bmp", "jpeg", "PNG", "JPG", "JPEG", "GIF", "BMP");
+	$uploadOk = 1;
+	$msg = "";
+	
+	$hash = md5(time());
+	$uploadOk = 1;
+	$msg = "";
+	$target_file = "";
+
+	if ($_FILES['image']["size"] > 5000000) {
+		$msg = "Sorry, your file is too large.";
+		$uploadOk = 0;
+	}
+			
+	$ext = pathinfo($_FILES['image']["name"], PATHINFO_EXTENSION);
+	
+	if(in_array($ext, $valid_image_formats))
+	{
+		$path .= "images/" . $image_category . '/';
+	}
+	else
+	{
+		$msg = "Not a valid format.";
+		$uploadOk = 0;
+	}
+	if ($uploadOk != 0) {
+		
+		$target_file = $path . $hash . "." . $ext;
+		move_uploaded_file($_FILES['image']["tmp_name"], $target_file);
+		$msg = "Upload Succeeded.";
+	}
+	
+	$result['status'] = $uploadOk;
+	$result['msg'] = $msg;
+	$result['path'] = $target_file;
+	$result['name'] = $_FILES['image']['name'];
+	return $result;
+}
+
 ?>

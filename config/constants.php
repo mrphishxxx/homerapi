@@ -12,4 +12,7 @@ define('DB_PASS', 'Ivone491409');
 
 define('DROID_API_KEY', 'AIzaSyD8hkAVuo5NiK3fDRiSJSmHdMXjiLXkynU');
 
+define('SINCH_APP_KEY', 'd42e0d2f-4592-4b2b-b707-006280f13fc1');
+define('SINCH_APP_SECRET', 'Nk6oOcSWa06178r00zrAUA==');
+
 ?>

@@ -345,6 +345,7 @@ function api_get_all_posts(){
 				'post_date' => $post->post_time,
 				'agent_id' => $post->user->id,
 				'agent_name' => $post->user->full_name,
+				'agent_avatar' => $post->user->avatar,
 				'quickblox_id' => $post->user->quickblox_id,
 				);
 			$rposts[] = $rpost;
@@ -409,6 +410,7 @@ function api_get_own_post_detail(){
 						'image_avatar' => $post->user->avatar,
 						'agent_id' => $post->user->id,
 						'agent_name' => $post->user->full_name,
+						'agent_avatar' => $post->user->avatar,
 						'quickblox_id' => $post->user->quickblox_id,
 						'location' => $post->location,
 						'lat' => $post->lat,
@@ -429,6 +431,7 @@ function api_get_own_post_detail(){
 						'image_avatar' => $post->user->avatar,
 						'agent_id' => $post->user->id,
 						'agent_name' => $post->user->full_name,
+						'agent_avatar' => $post->user->avatar,
 						'quickblox_id' => $post->user->quickblox_id,
 						'location' => $post->location,
 						'lat' => $post->lat,
@@ -502,6 +505,7 @@ function api_get_post_detail(){
 						'image_avatar' => $post->user->avatar,
 						'agent_id' => $post->user->id,
 						'agent_name' => $post->user->full_name,
+						'agent_avatar' => $post->user->avatar,
 						'quickblox_id' => $post->user->quickblox_id,
 						'location' => $post->location,
 						'lat' => $post->lat,
@@ -521,6 +525,7 @@ function api_get_post_detail(){
 						'image_avatar' => $post->user->avatar,
 						'agent_id' => $post->user->id,
 						'agent_name' => $post->user->full_name,
+						'agent_avatar' => $post->user->avatar,
 						'quickblox_id' => $post->user->quickblox_id,
 						'location' => $post->location,
 						'lat' => $post->lat,
@@ -681,9 +686,10 @@ function api_get_my_profile(){
  * @apiGroup User
  * 
  * @apiHeader {String} Authorization Users unique access-key.
+ * @apiParam {Number} agent_id Post ID
 */
 function api_get_user_profile(){
-	$params = ['agent_id', 'score'];
+	$params = ['agent_id'];
 	$result = validateParam($params);
 
 	if ($result === true){
@@ -727,7 +733,7 @@ function api_get_user_profile(){
  * @apiGroup User
  * 
  * @apiHeader {String} Authorization Users unique access-key.
- * @apiParam {Number} post_id Post ID
+ * @apiParam {Number} score Score
 */
 function api_rate_user(){
 	$params = ['agent_id', 'score'];
@@ -776,28 +782,147 @@ function api_rate_user(){
 	echo json_encode($result);
 }
 
-function api_test(){
-	// $post = Post::find(3);
-	// $areaRange = $post->area / 5;
- //  	$priceRange = $post->price / 5;
- //  	$ptype = $post->post_type == 1 ? 0 : 1;
-
-	// $similars = Post::where('property_type', $post->property_type)
- //                  ->whereRaw('abs(' . $post->area . ' - area) <= ' . $areaRange)
- //                  ->whereRaw('abs(' . $post->price . ' - price) <= ' . $priceRange)
- //                  ->where('num_rooms', '>=', $post->num_rooms)
- //                  ->where('post_type', $post->post_type)
- //                  ->where('id', '<>', $post->id)
- //                  ->get();
-
- //    echo json_encode($similars);
-	// $user = User::find(5);
-	// echo json_encode($user->posts);
-	if (sendEmail('lodestar9317@163.com', 'Test', 'This is a test', ['lodestar9317@gmail.com'])){
-		echo 'success';
-	} else{
-		echo 'failed';
+/**
+ * @api {post} /user/upload-avatar Upload User Avatar
+ * @apiVersion 1.0.0
+ * @apiName Upload Avatar
+ * @apiGroup User
+ * 
+ * @apiHeader {String} Authorization Users unique access-key.
+ * @apiParam {File} image Avatar Image File
+*/
+function api_upload_avatar(){
+	if ($result === true){
+		$token = $_SERVER['Authorization'];
+		$user = __get_user_from_token($token);
+			
+		if ($user == NULL){
+			$result = array(
+				'success' => 'false',
+				'message' => 'Invalid token',
+				);
+		} else{		
+			$uresult = upload('avatars');
+			$result = array();
+			if ($uresult['status'] == 0){
+				$result['success'] = 'false';
+				$result['message'] = $uresult['msg'];
+			} else{
+				$user->avatar = $uresult['path'];
+				$user->save();
+				$result = array(
+					'success' => 'true',
+					'message' => $uresult['msg'],
+					'data' => array(
+							'path' => $uresult['path'],
+						),
+					);
+			}
+		}
 	}
+	echo json_encode($result);
+}
+
+/**
+ * @api {post} /user/upload-creci Upload User Creci
+ * @apiVersion 1.0.0
+ * @apiName Upload Creci
+ * @apiGroup User
+ * 
+ * @apiHeader {String} Authorization Users unique access-key.
+ * @apiParam {File} image Creci Image File
+*/
+function api_upload_creci(){
+	if ($result === true){
+		$token = $_SERVER['Authorization'];
+		$user = __get_user_from_token($token);
+			
+		if ($user == NULL){
+			$result = array(
+				'success' => 'false',
+				'message' => 'Invalid token',
+				);
+		} else{		
+			$uresult = upload('crecis');
+			$result = array();
+			if ($uresult['status'] == 0){
+				$result['success'] = 'false';
+				$result['message'] = $uresult['msg'];
+			} else{
+				$user->creci = $uresult['path'];
+				$user->creci_verified = 1;
+				$user->save();
+				$result = array(
+					'success' => 'true',
+					'message' => $uresult['msg'],
+					'data' => array(
+							'path' => $uresult['path'],
+						),
+					);
+			}
+		}
+	}
+	echo json_encode($result);
+}
+
+/**
+ * @api {post} /user/send-phone Set User Verification Phone Number
+ * @apiVersion 1.0.0
+ * @apiName Upload Creci
+ * @apiGroup User
+ * 
+ * @apiHeader {String} Authorization Users unique access-key.
+ * @apiParam {String} phone Phone number
+*/
+function api_send_phone(){
+	$params = ['phone'];
+	$result = validateParam($params);
+
+	if ($result === true){
+		$token = $_SERVER['Authorization'];
+		$user = __get_user_from_token($token);
+		extract($_POST);
+		if ($user == NULL){
+			$result = array(
+				'success' => 'false',
+				'message' => 'Invalid token',
+				);
+		} else{
+			$user->phone = $phone;
+			$user->save();
+		}
+	}
+
+	echo json_encode($result);
+}
+
+
+
+
+
+
+
+function api_test(){
+	$key = SINCH_APP_KEY;
+	$secret = SINCH_APP_SECRET;
+	$phone_number = "+8613390552704";
+	$user = "application\\" . $key . ":" . $secret;
+	$message = array("message"=>"Test");
+	$data = json_encode($message);
+	$ch = curl_init('https://messagingapi.sinch.com/v1/sms/' . $phone_number);
+	curl_setopt($ch, CURLOPT_POST, true);
+	curl_setopt($ch, CURLOPT_USERPWD,$user);
+	curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+	curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+	$result = curl_exec($ch);
+	if(curl_errno($ch)) {
+	    echo 'Curl error: ' . curl_error($ch);
+	} else {
+	    echo $result;
+	}
+	curl_close($ch);
 }
 
 ?>

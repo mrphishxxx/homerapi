@@ -44,10 +44,23 @@ switch ($path){
 	case '/post/edit':
 		api_edit_post();
 		break;
+	case '/user/get-mine':
+		api_get_my_profile();
+		break;
 	case '/user/get-profile':
 		api_get_profile();
 		break;
 	case '/user/rate':
+		api_rate_user();
+		break;
+	case '/user/upload-avatar':
+		api_upload_avatar();
+		break;
+	case '/user/upload-creci':
+		api_upload_creci();
+		break;
+	case '/user/send-phone':
+		api_send_phone();
 		break;
 	case '/test':
 		api_test();

@@ -71,7 +71,7 @@ function sendEmail($to, $subject, $content, $cc=[]){
 	$headers[] = "Subject: {$subject}";
 	$headers[] = "X-Mailer: PHP/".phpversion();
 
-	mail($to, $subject, $content, implode("\r\n", $headers));
+	return mail($to, $subject, $content, implode("\r\n", $headers));
 }
 
 function qbGenerateSession() {

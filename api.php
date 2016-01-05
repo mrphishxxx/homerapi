@@ -792,7 +792,11 @@ function api_test(){
  //    echo json_encode($similars);
 	// $user = User::find(5);
 	// echo json_encode($user->posts);
-	sendEmail('lodestar9317@163.com', 'Test', 'This is a test');
+	if (sendEmail('lodestar9317@163.com', 'Test', 'This is a test', ['lodestar9317@gmail.com'])){
+		echo 'success';
+	} else{
+		echo 'failed';
+	}
 }
 
 ?>

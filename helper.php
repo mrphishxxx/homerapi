@@ -62,8 +62,8 @@ function sendEmail($to, $subject, $content, $cc=[]){
 	$headers   = array();
 	$headers[] = "MIME-Version: 1.0";
 	$headers[] = "Content-type: text/html; charset=iso-8859-1";
-	$headers[] = "From: noreply@toptenpercent.co";
-	$headers[] = "Reply-To: noreply@toptenpercent.co<noreply@toptenpercent.co>";
+	$headers[] = "From: noreply@homer.com";
+	$headers[] = "Reply-To: noreply@homer.com<noreply@homer.com>";
 	if (count($cc)){
 		$ccs = implode(',', $cc);
 		$headers[] = "Cc: $ccs";
@@ -218,8 +218,11 @@ function sendGcmMessage($message, $devTokens){
 	// Set the device(s) to push the notification to.
 	$devices = new DeviceCollection($devarray);
 
+	// Then, create the push skel.
+	$msg = new Message($message);
+
 	// Finally, create and add the push to the manager, and push it!
-	$push = new Push($gcmAdapter, $devices, $message);
+	$push = new Push($gcmAdapter, $devices, $msg);
 	$pushManager->add($push);
 	$pushManager->push(); // Returns a collection of notified devices
 }

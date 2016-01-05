@@ -328,6 +328,7 @@ function api_get_all_posts(){
 			);
 	} else{
 		$posts = Post::orderBy('id', 'desc')->get();
+		$rposts = array();
 
 		foreach ($posts as $post){
 			$rpost = array(

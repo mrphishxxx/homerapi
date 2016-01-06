@@ -225,4 +225,50 @@ function __view_post($user_id, $post_id){
   $user->viewedPosts()->attach($post_id);
 }
 
+function __reserve_verification($user_id, $verification_type){
+  $verification = Verification::where('user_id', $user_id)->where('verification_type', $verification_type)->first();
+  if ($verification == NULL){
+    $verification = new Verification;
+    $verification->user_id = $user_id;
+    $verification->verification_type = $verification_type;
+  }
+  $verification->verification_code = substr(md5($user_id . date('Y-m-d H:i:s')), 0, 5);
+  $verification->save();
+  if ($verification_type == 'phone'){
+
+  } else if ($verification_type == 'email') {
+    $user = User::find($user_id);
+    $content = 'Use this code <b>' . $verification->verification_code . '</b> for verification.';
+    sendEmail($user->email, 'User Email Verification', $content);
+  }
+}
+
+function __verify_user($user_id, $verification_type, $verification_code){
+  $verification = Verification::where('user_id', $user_id)->where('verification_type', $verification_type)->first();
+  $user = User::find($user_id);
+
+  if ($verification == NULL){
+    return -2;                      // no such verification was requested.
+  }
+  if ($verification->verification_code != $verification_code){
+    return 0;                       // wrong code
+  }
+  $ptime = strtotime($verification->updated_at);
+  $etime = time() - $ptime;
+  if ($etime > 300){
+    return -1;                      // 5 minutes passed. this code is no need.
+  }
+
+  $verification->verification_code = substr(md5($user_id . date('Y-m-d H:i:s')), 0, 5); // change code randomly.
+  $verification->save();
+
+  if ($verification_type == 'phone'){
+    $user->phone_verified = 1;
+  } else if ($verification_type == 'email'){
+    $user->email_verified = 1;
+  }
+  $user->save();
+  return 1;                         // correct.
+}
+
 ?>

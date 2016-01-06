@@ -62,6 +62,15 @@ switch ($path){
 	case '/user/send-phone':
 		api_send_phone();
 		break;
+	case '/user/verify-phone':
+		api_verify_phone();
+		break;
+	case '/user/request-email-verification':
+		api_request_email_verification();
+		break;
+	case '/user/verify-email':
+		api_verify_email();
+		break;
 	case '/test':
 		api_test();
 		break;

@@ -12,4 +12,5 @@ return array(
     'SimilarPost' => $baseDir . '/models/SimilarPost.php',
     'User' => $baseDir . '/models/User.php',
     'UserRating' => $baseDir . '/models/UserRating.php',
+    'Verification' => $baseDir . '/models/Verification.php',
 );

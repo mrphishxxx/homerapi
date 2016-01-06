@@ -868,7 +868,7 @@ function api_upload_creci(){
 /**
  * @api {post} /user/send-phone Set User Verification Phone Number
  * @apiVersion 1.0.0
- * @apiName Upload Creci
+ * @apiName Send Phone Number
  * @apiGroup User
  * 
  * @apiHeader {String} Authorization Users unique access-key.
@@ -890,14 +890,123 @@ function api_send_phone(){
 		} else{
 			$user->phone = $phone;
 			$user->save();
+			__reserve_verification($user->id, 'phone');
 		}
 	}
 
 	echo json_encode($result);
 }
 
+/**
+ * @api {post} /user/verify-phone Verify phone number with the number received by SMS
+ * @apiVersion 1.0.0
+ * @apiName Verify Phone Number
+ * @apiGroup User
+ * 
+ * @apiHeader {String} Authorization Users unique access-key.
+ * @apiParam {String} code Verification code given by SMS
+*/
+function api_verify_phone(){
+	$params = ['code'];
+	$result = validateParam($params);
 
+	if ($result === true){
+		$token = $_SERVER['Authorization'];
+		$user = __get_user_from_token($token);
+		extract($_POST);
+		if ($user == NULL){
+			$result = array(
+				'success' => 'false',
+				'message' => 'Invalid token',
+				);
+		} else{
+			$r = __verify_user($user->id, 'phone', $code);
+			if ($r == 1){
+				$result = array(
+					'success' => 'true',
+					'message' => 'Successfully verified phone number.'
+					);
+			} else{
+				$result['success'] = 'false';
+				if ($r == -2){
+					$result['message'] = "You haven't requested verification.";
+				} else if ($r == -1){
+					$result['message'] = "This code is expired. please request another one.";
+				}
+			}
+		}
+	}
 
+	echo json_encode($result);
+}
+
+/**
+ * @api {post} /user/request-email-verification Request Email verification
+ * @apiVersion 1.0.0
+ * @apiName Request Email verification
+ * @apiGroup User
+ * 
+ * @apiHeader {String} Authorization Users unique access-key.
+*/
+function api_request_email_verification(){
+	$token = $_SERVER['Authorization'];
+	$user = __get_user_from_token($token);
+	extract($_POST);
+	if ($user == NULL){
+		$result = array(
+			'success' => 'false',
+			'message' => 'Invalid token',
+			);
+	} else{
+		__reserve_verification($user->id, 'email');
+	}
+
+	echo json_encode($result);
+}
+
+/**
+ * @api {post} /user/verify-email Verify Email with the number received by Email
+ * @apiVersion 1.0.0
+ * @apiName Verify Email
+ * @apiGroup User
+ * 
+ * @apiHeader {String} Authorization Users unique access-key.
+ * @apiParam {String} code Verification code given by SMS
+*/
+function api_verify_email(){
+	$params = ['code'];
+	$result = validateParam($params);
+
+	if ($result === true){
+		$token = $_SERVER['Authorization'];
+		$user = __get_user_from_token($token);
+		extract($_POST);
+		if ($user == NULL){
+			$result = array(
+				'success' => 'false',
+				'message' => 'Invalid token',
+				);
+		} else{
+			$r = __reserve_verification($user->id, 'email');
+
+			if ($r == 1){
+				$result = array(
+					'success' => 'true',
+					'message' => 'Successfully verified email.'
+					);
+			} else{
+				$result['success'] = 'false';
+				if ($r == -2){
+					$result['message'] = "You haven't requested verification.";
+				} else if ($r == -1){
+					$result['message'] = "This code is expired. please request another one.";
+				}
+			}
+		}
+	}
+
+	echo json_encode($result);
+}
 
 
 

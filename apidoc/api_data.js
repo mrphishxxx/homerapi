@@ -68,68 +68,10 @@ define({ "api": [
   },
   {
     "type": "post",
-    "url": "/auth/login",
-    "title": "Login with push notification parameter",
+    "url": "/auth/login_facebook",
+    "title": "Login with Facebook and push notification parameter",
     "version": "1.0.0",
-    "name": "Login",
-    "group": "Auth",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "full_name",
-            "description": "<p>User's full name.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "email",
-            "description": "<p>User Email.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "pswd",
-            "description": "<p>User Password.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": false,
-            "field": "push_type",
-            "description": "<p>Device type for push notification. 1 : iOS, 2 : Android.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "push_token",
-            "description": "<p>Device token for push notification.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "google_id",
-            "description": "<p>Google ID</p>"
-          }
-        ]
-      }
-    },
-    "filename": "./api.php",
-    "groupTitle": "Auth"
-  },
-  {
-    "type": "post",
-    "url": "/auth/login",
-    "title": "Login with push notification parameter",
-    "version": "1.0.0",
-    "name": "Login",
+    "name": "Login_with_Facebook",
     "group": "Auth",
     "parameter": {
       "fields": {
@@ -175,6 +117,64 @@ define({ "api": [
             "optional": false,
             "field": "facebook_id",
             "description": "<p>Facebook Id</p>"
+          }
+        ]
+      }
+    },
+    "filename": "./api.php",
+    "groupTitle": "Auth"
+  },
+  {
+    "type": "post",
+    "url": "/auth/login_google",
+    "title": "Login with Google and push notification parameter",
+    "version": "1.0.0",
+    "name": "Login_with_Google",
+    "group": "Auth",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "full_name",
+            "description": "<p>User's full name.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "email",
+            "description": "<p>User Email.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "pswd",
+            "description": "<p>User Password.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "push_type",
+            "description": "<p>Device type for push notification. 1 : iOS, 2 : Android.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "push_token",
+            "description": "<p>Device token for push notification.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "google_id",
+            "description": "<p>Google ID</p>"
           }
         ]
       }

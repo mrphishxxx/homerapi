@@ -34,9 +34,9 @@ function api_login(){
 }
 
 /**
- * @api {post} /auth/login Login with push notification parameter
+ * @api {post} /auth/login_facebook Login with Facebook and push notification parameter
  * @apiVersion 1.0.0
- * @apiName Login
+ * @apiName Login with Facebook
  * @apiGroup Auth
  * 
  * @apiParam {String} full_name User's full name.
@@ -70,9 +70,9 @@ function api_login_facebook(){
 }
 
 /**
- * @api {post} /auth/login Login with push notification parameter
+ * @api {post} /auth/login_google Login with Google and push notification parameter
  * @apiVersion 1.0.0
- * @apiName Login
+ * @apiName Login with Google
  * @apiGroup Auth
  * 
  * @apiParam {String} full_name User's full name.

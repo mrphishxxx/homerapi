@@ -700,6 +700,19 @@ define({ "api": [
         ]
       }
     },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "agent_id",
+            "description": "<p>Post ID</p>"
+          }
+        ]
+      }
+    },
     "filename": "./api.php",
     "groupTitle": "User"
   },
@@ -730,8 +743,211 @@ define({ "api": [
             "group": "Parameter",
             "type": "Number",
             "optional": false,
-            "field": "post_id",
-            "description": "<p>Post ID</p>"
+            "field": "score",
+            "description": "<p>Score</p>"
+          }
+        ]
+      }
+    },
+    "filename": "./api.php",
+    "groupTitle": "User"
+  },
+  {
+    "type": "post",
+    "url": "/user/request-email-verification",
+    "title": "Request Email verification",
+    "version": "1.0.0",
+    "name": "Request_Email_verification",
+    "group": "User",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Users unique access-key.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "./api.php",
+    "groupTitle": "User"
+  },
+  {
+    "type": "post",
+    "url": "/user/send-phone",
+    "title": "Set User Verification Phone Number",
+    "version": "1.0.0",
+    "name": "Send_Phone_Number",
+    "group": "User",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Users unique access-key.</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "phone",
+            "description": "<p>Phone number</p>"
+          }
+        ]
+      }
+    },
+    "filename": "./api.php",
+    "groupTitle": "User"
+  },
+  {
+    "type": "post",
+    "url": "/user/upload-avatar",
+    "title": "Upload User Avatar",
+    "version": "1.0.0",
+    "name": "Upload_Avatar",
+    "group": "User",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Users unique access-key.</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "File",
+            "optional": false,
+            "field": "image",
+            "description": "<p>Avatar Image File</p>"
+          }
+        ]
+      }
+    },
+    "filename": "./api.php",
+    "groupTitle": "User"
+  },
+  {
+    "type": "post",
+    "url": "/user/upload-creci",
+    "title": "Upload User Creci",
+    "version": "1.0.0",
+    "name": "Upload_Creci",
+    "group": "User",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Users unique access-key.</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "File",
+            "optional": false,
+            "field": "image",
+            "description": "<p>Creci Image File</p>"
+          }
+        ]
+      }
+    },
+    "filename": "./api.php",
+    "groupTitle": "User"
+  },
+  {
+    "type": "post",
+    "url": "/user/verify-email",
+    "title": "Verify Email with the number received by Email",
+    "version": "1.0.0",
+    "name": "Verify_Email",
+    "group": "User",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Users unique access-key.</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "code",
+            "description": "<p>Verification code given by SMS</p>"
+          }
+        ]
+      }
+    },
+    "filename": "./api.php",
+    "groupTitle": "User"
+  },
+  {
+    "type": "post",
+    "url": "/user/verify-phone",
+    "title": "Verify phone number with the number received by SMS",
+    "version": "1.0.0",
+    "name": "Verify_Phone_Number",
+    "group": "User",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Users unique access-key.</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "code",
+            "description": "<p>Verification code given by SMS</p>"
           }
         ]
       }

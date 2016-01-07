@@ -792,32 +792,30 @@ function api_rate_user(){
  * @apiParam {File} image Avatar Image File
 */
 function api_upload_avatar(){
-	if ($result === true){
-		$token = $_SERVER['Authorization'];
-		$user = __get_user_from_token($token);
-			
-		if ($user == NULL){
+	$token = $_SERVER['Authorization'];
+	$user = __get_user_from_token($token);
+		
+	if ($user == NULL){
+		$result = array(
+			'success' => 'false',
+			'message' => 'Invalid token',
+			);
+	} else{		
+		$uresult = upload('avatars');
+		$result = array();
+		if ($uresult['status'] == 0){
+			$result['success'] = 'false';
+			$result['message'] = $uresult['msg'];
+		} else{
+			$user->avatar = $uresult['path'];
+			$user->save();
 			$result = array(
-				'success' => 'false',
-				'message' => 'Invalid token',
+				'success' => 'true',
+				'message' => $uresult['msg'],
+				'data' => array(
+						'path' => $uresult['path'],
+					),
 				);
-		} else{		
-			$uresult = upload('avatars');
-			$result = array();
-			if ($uresult['status'] == 0){
-				$result['success'] = 'false';
-				$result['message'] = $uresult['msg'];
-			} else{
-				$user->avatar = $uresult['path'];
-				$user->save();
-				$result = array(
-					'success' => 'true',
-					'message' => $uresult['msg'],
-					'data' => array(
-							'path' => $uresult['path'],
-						),
-					);
-			}
 		}
 	}
 	echo json_encode($result);
@@ -833,33 +831,31 @@ function api_upload_avatar(){
  * @apiParam {File} image Creci Image File
 */
 function api_upload_creci(){
-	if ($result === true){
-		$token = $_SERVER['Authorization'];
-		$user = __get_user_from_token($token);
-			
-		if ($user == NULL){
+	$token = $_SERVER['Authorization'];
+	$user = __get_user_from_token($token);
+		
+	if ($user == NULL){
+		$result = array(
+			'success' => 'false',
+			'message' => 'Invalid token',
+			);
+	} else{		
+		$uresult = upload('crecis');
+		$result = array();
+		if ($uresult['status'] == 0){
+			$result['success'] = 'false';
+			$result['message'] = $uresult['msg'];
+		} else{
+			$user->creci = $uresult['path'];
+			$user->creci_verified = 1;
+			$user->save();
 			$result = array(
-				'success' => 'false',
-				'message' => 'Invalid token',
+				'success' => 'true',
+				'message' => $uresult['msg'],
+				'data' => array(
+						'path' => $uresult['path'],
+					),
 				);
-		} else{		
-			$uresult = upload('crecis');
-			$result = array();
-			if ($uresult['status'] == 0){
-				$result['success'] = 'false';
-				$result['message'] = $uresult['msg'];
-			} else{
-				$user->creci = $uresult['path'];
-				$user->creci_verified = 1;
-				$user->save();
-				$result = array(
-					'success' => 'true',
-					'message' => $uresult['msg'],
-					'data' => array(
-							'path' => $uresult['path'],
-						),
-					);
-			}
 		}
 	}
 	echo json_encode($result);

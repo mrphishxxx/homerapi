@@ -669,8 +669,11 @@ function api_get_my_profile(){
 			'message' => 'Successfully fetched user profile',
 			'data' => array(
 				'name' => $user->full_name,
+				'email' => $user->email,
 				'email_verified' => $user->email_verified,
+				'phone' => $user->phone,
 				'phone_verified' => $user->phone_verified,
+				'creci' => $user->creci,
 				'creci_verified' => $user->creci_verified,
 				'score' => $user->ratings()->avg('score'),
 				)

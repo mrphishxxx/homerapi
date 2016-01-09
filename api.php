@@ -767,7 +767,7 @@ function api_rate_user(){
 						'message' => 'No such user',
 						);
 				} else{
-					if ($tuser->ratings()->where('user_from', $user->id)->count > 0){
+					if ($tuser->ratings()->where('user_from', $user->id)->count() > 0){
 						$result = array(
 							'success' => 'false',
 							'message' => "You've already rated this user"

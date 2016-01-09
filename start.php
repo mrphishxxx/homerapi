@@ -48,7 +48,7 @@ switch ($path){
 		api_get_my_profile();
 		break;
 	case '/user/get':
-		api_get_profile();
+		api_get_user_profile();
 		break;
 	case '/user/rate':
 		api_rate_user();

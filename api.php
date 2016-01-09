@@ -705,6 +705,7 @@ function api_get_user_profile(){
 				'message' => 'Invalid Token',
 				);
 		} else{
+			extract($_POST);
 			$user = User::find($agent_id);
 			if ($user == NULL){
 				$result = array(

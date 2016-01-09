@@ -952,6 +952,7 @@ function api_verify_phone(){
 function api_request_email_verification(){
 	$token = $_SERVER['Authorization'];
 	$user = __get_user_from_token($token);
+	$result = array();
 	extract($_POST);
 	if ($user == NULL){
 		$result = array(
@@ -960,6 +961,10 @@ function api_request_email_verification(){
 			);
 	} else{
 		__reserve_verification($user->id, 'email');
+		$result = array(
+			'success' => 'true',
+			'message' => 'Email sent.'
+			);
 	}
 
 	echo json_encode($result);

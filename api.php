@@ -738,6 +738,7 @@ function api_get_user_profile(){
  * 
  * @apiHeader {String} Authorization Users unique access-key.
  * @apiParam {Number} score Score
+ * @apiParam {Number} agent_id Agent id
 */
 function api_rate_user(){
 	$params = ['agent_id', 'score'];

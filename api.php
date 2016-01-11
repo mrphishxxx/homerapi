@@ -932,7 +932,7 @@ function api_verify_phone(){
 					'message' => 'Successfully verified phone number.'
 					);
 			} else{
-				$result['success'] = 'false';
+				$result = array('success' => 'false');
 				if ($r == -2){
 					$result['message'] = "You haven't requested verification.";
 				} else if ($r == -1){

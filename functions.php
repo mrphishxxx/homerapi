@@ -211,9 +211,15 @@ function __process_post($post){
     $user = $post->user;
     foreach ($user->logins as $login){
       if ($login->push_type == 2){
+        if ($login->push_token == NULL || strlen($login->push_token) < 10){
+          continue;
+        }
         $devices[] = $login->push_token;
       }
     }
+  }
+  if (count($devices) == 0){
+    return;
   }
   $message = $post->user->full_name . ' has just posted that matches your post';
   sendGcmMessage($message, $devices);

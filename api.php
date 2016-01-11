@@ -393,8 +393,8 @@ function api_get_own_post_detail(){
 					);
 			} else{
 				$dist = 'CoordinateDistanceKM(lat, lng, ' . $post->lat . ', ' . $post->lng . ')';
-				$matchings = $post->matchingPosts()->whereRaw($dist)->orderByRaw($dist, 'asc')->limit(100)->get();// + $post->matchedPosts;
-				$similars = $post->similarFrom()->whereRaw($dist)->orderByRaw($dist, 'asc')->limit(100)->get();// + $post->similarTo;
+				$matchings = $post->matchingPosts()->whereRaw($dist . ' < 5')->orderByRaw($dist, 'asc')->limit(100)->get();// + $post->matchedPosts;
+				$considers = $post->matchingPosts()->whereRaw($dist . ' > 5')->orderByRaw($dist, 'asc')->limit(100)->get();// + $post->matchedPosts;
 
 				$seenPosts = $user->viewedPosts;
 				$seenIds = array();
@@ -425,7 +425,7 @@ function api_get_own_post_detail(){
 					$marray[] = $m;
 				}
 
-				foreach ($similars as $post) {
+				foreach ($considers as $post) {
 					$s = array(
 						'post_id' => $post->id,
 						'image_avatar' => $post->user->avatar,
@@ -453,7 +453,7 @@ function api_get_own_post_detail(){
 					'message' => 'Successfully fetched',
 					'data' => array(
 						'matchings' => $marray,
-						'similars' => $sarray,
+						'seealso' => $sarray,
 						),
 					);
 			}
@@ -638,7 +638,7 @@ function api_edit_post(){
 
 				$result = array(
 					'success' => 'true',
-					'message' => 'Successfully deleted',
+					'message' => 'Successfully edited',
 					);
 			}
 		}

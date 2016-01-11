@@ -892,6 +892,10 @@ function api_send_phone(){
 			$user->phone = $phone;
 			$user->save();
 			__reserve_verification($user->id, 'phone');
+			$result = array(
+				'success' => 'true',
+				'message' => 'SMS has been sent.',
+				);
 		}
 	}
 
@@ -1018,26 +1022,35 @@ function api_verify_email(){
 
 
 function api_test(){
-	$key = SINCH_APP_KEY;
-	$secret = SINCH_APP_SECRET;
-	$phone_number = "+8613390552704";
-	$user = "application\\" . $key . ":" . $secret;
-	$message = array("message"=>"Test");
-	$data = json_encode($message);
-	$ch = curl_init('https://messagingapi.sinch.com/v1/sms/' . $phone_number);
-	curl_setopt($ch, CURLOPT_POST, true);
-	curl_setopt($ch, CURLOPT_USERPWD,$user);
-	curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-	curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-	$result = curl_exec($ch);
-	if(curl_errno($ch)) {
-	    echo 'Curl error: ' . curl_error($ch);
-	} else {
-	    echo $result;
-	}
-	curl_close($ch);
+	// $key = SINCH_APP_KEY;
+	// $secret = SINCH_APP_SECRET;
+	// $phone_number = "+8613390552704";
+	// $user = "application\\" . $key . ":" . $secret;
+	// $message = array("message"=>"Test");
+	// $data = json_encode($message);
+	// $ch = curl_init('https://messagingapi.sinch.com/v1/sms/' . $phone_number);
+	// curl_setopt($ch, CURLOPT_POST, true);
+	// curl_setopt($ch, CURLOPT_USERPWD,$user);
+	// curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+	// curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	// curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+	// curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+	// $result = curl_exec($ch);
+	// if(curl_errno($ch)) {
+	//     echo 'Curl error: ' . curl_error($ch);
+	// } else {
+	//     echo $result;
+	// }
+	// curl_close($ch);
+	$account_sid = 'AC9937d29c6659b015a408cf849e5aa611'; 
+	$auth_token = '5ecc8903da4ad3913e380025f75a82b3'; 
+	$client = new Services_Twilio($account_sid, $auth_token); 
+ 
+	$client->account->messages->create(array( 
+		'To' => "+8615840572747", 
+		'From' => "+18559729840", 
+		'Body' => "hello",   
+	));
 }
 
 ?>

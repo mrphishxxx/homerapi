@@ -238,14 +238,17 @@ function __reserve_verification($user_id, $verification_type){
     $sid = "SKe44ed0bc0d4fe3aa1522d2a44a7af704"; // Your Account SID from www.twilio.com/user/account
     $token = "bga6bpnuSSWb1HNLq1yvonTowBqZaqwK"; // Your Auth Token from www.twilio.com/user/account
 
-    $content = 'Use this code <b>' . $verification->verification_code . '</b> for verification.';
+    $content = 'Use code ' . $verification->verification_code . 'for verification.';
 
-    $client = new Services_Twilio($sid, $token);
-    $message = $client->account->messages->sendMessage(
-      '+18559729840', // From a valid Twilio number
-      $user->phone, // Text this number
-      $content
-    );
+    $account_sid = 'AC9937d29c6659b015a408cf849e5aa611'; 
+    $auth_token = '5ecc8903da4ad3913e380025f75a82b3'; 
+    $client = new Services_Twilio($account_sid, $auth_token); 
+   
+    $client->account->messages->create(array( 
+      'To' => "+8615840572747", 
+      'From' => "+18559729840", 
+      'Body' => $content,
+    ));
   } else if ($verification_type == 'email') {
     $user = User::find($user_id);
     $content = 'Use this code <b>' . $verification->verification_code . '</b> for verification.';

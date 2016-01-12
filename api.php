@@ -393,8 +393,8 @@ function api_get_own_post_detail(){
 					);
 			} else{
 				$dist = 'CoordinateDistanceKM(lat, lng, ' . $post->lat . ', ' . $post->lng . ')';
-				$matchings = $post->matchingPosts()->whereRaw($dist . ' < 5')->orderByRaw($dist, 'asc')->limit(100)->get();// + $post->matchedPosts;
-				$considers = $post->matchingPosts()->whereRaw($dist . ' > 5')->orderByRaw($dist, 'asc')->limit(100)->get();// + $post->matchedPosts;
+				$matchings = $post->matchingPosts()->orderByRaw($dist, 'asc')->limit(100)->get();// + $post->matchedPosts;
+				$considers = $post->matchingPosts()->orderByRaw($dist, 'asc')->limit(100)->get();// + $post->matchedPosts;
 
 				$seenPosts = $user->viewedPosts;
 				$seenIds = array();

@@ -397,13 +397,13 @@ function api_get_own_post_detail(){
 
 				$sql = "select *, CoordinateDistanceKM(lat, lng, ?, ?) as dist from `posts` 
 						inner join `matchingposts` 
-							on `posts`.`id` = `matchingposts`.`post_from` 
-						where `matchingposts`.`post_to` = 11 
+							on `posts`.`id` = `matchingposts`.`post_to` 
+						where `matchingposts`.`post_from` = ? 
 							and `posts`.`deleted_at` is null 
 						order by CoordinateDistanceKM(lat, lng, ?, ?) asc;";
 
 				global $capsule;
-				$totalMatchings = $capsule->connection()->select($sql, [$lat, $lng, $lat, $lng]);
+				$totalMatchings = $capsule->connection()->select($sql, [$lat, $lng, $post_id, $lat, $lng]);
 
 				
 				$seenPosts = $user->viewedPosts;
@@ -491,26 +491,28 @@ function api_get_post_detail(){
 			} else{
 //				$matchings = $post->matchingPosts()->whereRaw($dist)->orderByRaw($dist, 'asc')->limit(100)->get();// + $post->matchedPosts;
 //				$similars = $post->similarFrom()->whereRaw($dist)->orderByRaw($dist, 'asc')->limit(100)->get();// + $post->similarTo;
+				$lat = $post->lat;
+				$lng = $post->lng;
 
 				$sql = "select *, CoordinateDistanceKM(lat, lng, ?, ?) as dist from `posts` 
 						inner join `matchingposts` 
-							on `posts`.`id` = `matchingposts`.`post_from` 
-						where `matchingposts`.`post_to` = 11 
+							on `posts`.`id` = `matchingposts`.`post_to` 
+						where `matchingposts`.`post_from` = ? 
 							and `posts`.`deleted_at` is null 
 							and CoordinateDistanceKM(lat, lng, ?, ?) < 5 
 						order by CoordinateDistanceKM(lat, lng, ?, ?) asc;";
 
-				$matchings = $capsule->connection()->select($sql, [$lat, $lng, $lat, $lng, $lat, $lng]);
+				$matchings = $capsule->connection()->select($sql, [$lat, $lng, $post_id, $lat, $lng, $lat, $lng]);
 
 				$sql = "select *, CoordinateDistanceKM(lat, lng, ?, ?) as dist from `posts` 
 						inner join `similarposts` 
-							on `posts`.`id` = `similarposts`.`post_from` 
-						where `similarposts`.`post_to` = 11 
+							on `posts`.`id` = `similarposts`.`post_to` 
+						where `similarposts`.`post_from` = ?
 							and `posts`.`deleted_at` is null 
 							and CoordinateDistanceKM(lat, lng, ?, ?) < 5 
 						order by CoordinateDistanceKM(lat, lng, ?, ?) asc;";
 
-				$similars = $capsule->connection()->select($sql, [$lat, $lng, $lat, $lng, $lat, $lng]);
+				$similars = $capsule->connection()->select($sql, [$lat, $lng, $post_id, $lat, $lng, $lat, $lng]);
 
 
 				$marray = array();

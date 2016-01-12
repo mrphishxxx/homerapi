@@ -194,6 +194,10 @@ function __process_post($post){
 
   foreach ($similars as $s){
     $post->similarTo()->attach($s->id);
+    if ($post->num_rooms == $s->num_rooms){
+      $s->similarTo()->detach($post->id);
+      $s->similarTo()->attach($post->id);
+    }
   }
 
   // finding matchings
@@ -208,6 +212,10 @@ function __process_post($post){
   $devices = array();
   foreach ($matchings as $m){
     $post->matchedPosts()->attach($m->id);
+    if ($post->num_rooms == $m->num_rooms){
+      $m->matchedPosts()->detach($post->id);
+      $m->matchedPosts()->attach($post->id);
+    }
     $user = $post->user;
     foreach ($user->logins as $login){
       if ($login->push_type == 2){

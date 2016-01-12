@@ -392,10 +392,20 @@ function api_get_own_post_detail(){
 					'message' => 'No such post',
 					);
 			} else{
-				$dist = 'CoordinateDistanceKM(lat, lng, ' . $post->lat . ', ' . $post->lng . ')';
-				$matchings = $post->matchingPosts()->orderByRaw($dist, 'asc')->limit(100)->get();// + $post->matchedPosts;
-				$considers = $post->matchingPosts()->orderByRaw($dist, 'asc')->limit(100)->get();// + $post->matchedPosts;
+				$lat = $post->lat;
+				$lng = $post->lng;
 
+				$sql = "select *, CoordinateDistanceKM(lat, lng, ?, ?) as dist from `posts` 
+						inner join `matchingposts` 
+							on `posts`.`id` = `matchingposts`.`post_from` 
+						where `matchingposts`.`post_to` = 11 
+							and `posts`.`deleted_at` is null 
+						order by CoordinateDistanceKM(lat, lng, ?, ?) asc;";
+
+				global $capsule;
+				$totalMatchings = $capsule->connection()->select($sql, [$lat, $lng, $lat, $lng]);
+
+				
 				$seenPosts = $user->viewedPosts;
 				$seenIds = array();
 				foreach ($seenPosts as $p){
@@ -404,46 +414,31 @@ function api_get_own_post_detail(){
 
 				$marray = array();
 				$sarray = array();
-				foreach ($matchings as $post){
+				foreach ($totalMatchings as $t){
+					$p = Post::find($t->id);
 					$m = array(
-						'post_id' => $post->id,
-						'image_avatar' => $post->user->avatar,
-						'agent_id' => $post->user->id,
-						'agent_name' => $post->user->full_name,
-						'agent_avatar' => $post->user->avatar,
-						'quickblox_id' => $post->user->quickblox_id,
-						'location' => $post->location,
-						'lat' => $post->lat,
-						'lng' => $post->lng,
-						'num_rooms' => $post->num_rooms,
-						'area' => $post->area,
-						'price' => $post->price,
-						'description' => $post->description,
-						'post_date' => $post->post_time,
-						'is_new' => in_array($post->id, $seenIds),
+						'post_id' => $p->id,
+						'image_avatar' => $p->user->avatar,
+						'agent_id' => $p->user->id,
+						'agent_name' => $p->user->full_name,
+						'agent_avatar' => $p->user->avatar,
+						'quickblox_id' => $p->user->quickblox_id,
+						'location' => $p->location,
+						'lat' => $p->lat,
+						'lng' => $p->lng,
+						'num_rooms' => $p->num_rooms,
+						'area' => $p->area,
+						'price' => $p->price,
+						'description' => $p->description,
+						'post_date' => $p->post_time,
+						'is_new' => in_array($p->id, $seenIds),
+						'distance' => $t->dist
 						);
-					$marray[] = $m;
-				}
-
-				foreach ($considers as $post) {
-					$s = array(
-						'post_id' => $post->id,
-						'image_avatar' => $post->user->avatar,
-						'agent_id' => $post->user->id,
-						'agent_name' => $post->user->full_name,
-						'agent_avatar' => $post->user->avatar,
-						'quickblox_id' => $post->user->quickblox_id,
-						'location' => $post->location,
-						'lat' => $post->lat,
-						'lng' => $post->lng,
-						'num_rooms' => $post->num_rooms,
-						'area' => $post->area,
-						'price' => $post->price,
-						'description' => $post->description,
-						'post_date' => $post->post_time,
-						'is_new' => in_array($post->id, $seenIds),
-						);
-					$sarray[] = $s;
+					if ($post->dist > 5){
+						$sarray[] = $m;
+					} else{
+						$marray[] = $m;
+					}
 				}
 
 				__view_post($user->id, $post->id);
@@ -475,6 +470,7 @@ function api_get_own_post_detail(){
 function api_get_post_detail(){
 	$params = ['post_id'];
 	$result = validateParam($params);
+	global $capsule;
 
 	if ($result === true){
 		$token = $_SERVER['Authorization'];
@@ -493,13 +489,34 @@ function api_get_post_detail(){
 					'message' => 'No such post',
 					);
 			} else{
-				$dist = 'CoordinateDistanceKM(lat, lng, ' . $post->lat . ', ' . $post->lng . ')';
-				$matchings = $post->matchingPosts()->whereRaw($dist)->orderByRaw($dist, 'asc')->limit(100)->get();// + $post->matchedPosts;
-				$similars = $post->similarFrom()->whereRaw($dist)->orderByRaw($dist, 'asc')->limit(100)->get();// + $post->similarTo;
+//				$matchings = $post->matchingPosts()->whereRaw($dist)->orderByRaw($dist, 'asc')->limit(100)->get();// + $post->matchedPosts;
+//				$similars = $post->similarFrom()->whereRaw($dist)->orderByRaw($dist, 'asc')->limit(100)->get();// + $post->similarTo;
+
+				$sql = "select *, CoordinateDistanceKM(lat, lng, ?, ?) as dist from `posts` 
+						inner join `matchingposts` 
+							on `posts`.`id` = `matchingposts`.`post_from` 
+						where `matchingposts`.`post_to` = 11 
+							and `posts`.`deleted_at` is null 
+							and CoordinateDistanceKM(lat, lng, ?, ?) < 5 
+						order by CoordinateDistanceKM(lat, lng, ?, ?) asc;";
+
+				$matchings = $capsule->connection()->select($sql, [$lat, $lng, $lat, $lng, $lat, $lng]);
+
+				$sql = "select *, CoordinateDistanceKM(lat, lng, ?, ?) as dist from `posts` 
+						inner join `similarposts` 
+							on `posts`.`id` = `similarposts`.`post_from` 
+						where `similarposts`.`post_to` = 11 
+							and `posts`.`deleted_at` is null 
+							and CoordinateDistanceKM(lat, lng, ?, ?) < 5 
+						order by CoordinateDistanceKM(lat, lng, ?, ?) asc;";
+
+				$similars = $capsule->connection()->select($sql, [$lat, $lng, $lat, $lng, $lat, $lng]);
+
 
 				$marray = array();
 				$sarray = array();
-				foreach ($matchings as $post){
+				foreach ($matchings as $p){
+					$post = Post::find($p->id);
 					$m = array(
 						'post_id' => $post->id,
 						'image_avatar' => $post->user->avatar,
@@ -519,7 +536,8 @@ function api_get_post_detail(){
 					$marray[] = $m;
 				}
 
-				foreach ($similars as $post) {
+				foreach ($similars as $p) {
+					$post = Post::find($p->id);
 					$s = array(
 						'post_id' => $post->id,
 						'image_avatar' => $post->user->avatar,

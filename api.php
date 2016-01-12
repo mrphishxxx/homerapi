@@ -28,6 +28,7 @@ function api_login(){
 			$result['data']['token'] = $user->logins()->first()->token;
 			$result['data']['avatar'] = $user->avatar;
 			$result['data']['full_name'] = $user->full_name;
+			$result['data']['agent_id'] = $user->id;
 		}
 	}
 	echo json_encode($result);
@@ -64,6 +65,7 @@ function api_login_facebook(){
 			$result['data']['token'] = $user->login_token;
 			$result['data']['avatar'] = $user->avatar;
 			$result['data']['full_name'] = $user->full_name;
+			$result['data']['agent_id'] = $user->id;
 		}
 	}
 	echo json_encode($result);
@@ -100,6 +102,7 @@ function api_login_google(){
 			$result['data']['token'] = $user->login_token;
 			$result['data']['avatar'] = $user->avatar;
 			$result['data']['full_name'] = $user->full_name;
+			$result['data']['agent_id'] = $user->id;
 		}
 	}
 	echo json_encode($result);
@@ -138,6 +141,7 @@ function api_register(){
 				$result['data']['token'] = $user->logins()->first()->token;
 				$result['data']['avatar'] = $user->avatar;
 				$result['data']['full_name'] = $user->full_name;
+				$result['data']['agent_id'] = $user->id;
 			}
 		} else{
 			$result['message'] = 'This email is already used.';

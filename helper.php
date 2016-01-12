@@ -122,12 +122,13 @@ function qbGenerateSession() {
 	return $token;
 }
 
-function qbSignupUser($token, $login, $email, $password) {
+function qbSignupUser($token, $login, $email, $full_name, $password) {
 	$request = json_encode(array(
 		'user' => array(
 			'login' => $login,
 			'email' => $email,
 			'password' => $password,
+			'full_name' => $full_name,
 			)
 		));
 

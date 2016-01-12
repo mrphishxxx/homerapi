@@ -70,7 +70,7 @@ function __register($full_name, $email, $pswd, $facebook=NULL, $google=NULL){
     $user->creci_verified = 0;
 
     $token = qbGenerateSession();
-    $user->quickblox_id = qbSignupUser($token, '', $email, QB_USER_PASS)->id;
+    $user->quickblox_id = qbSignupUser($token, '', $email, $full_name, QB_USER_PASS)->id;
     
     $user->save();
 

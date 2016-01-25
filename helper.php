@@ -59,19 +59,20 @@ function validateParam($names){
 
 function sendEmail($to, $subject, $content, $cc=[]){
 	
-	$headers   = array();
-	$headers[] = "MIME-Version: 1.0";
-	$headers[] = "Content-type: text/html; charset=iso-8859-1";
-	$headers[] = "From: noreply@homer.com";
-	$headers[] = "Reply-To: noreply@homer.com<noreply@homer.com>";
-	if (count($cc)){
-		$ccs = implode(',', $cc);
-		$headers[] = "Cc: $ccs";
-	}
-	$headers[] = "Subject: {$subject}";
-	$headers[] = "X-Mailer: PHP/".phpversion();
+	// $headers   = array();
+	// $headers[] = "MIME-Version: 1.0";
+	// $headers[] = "Content-type: text/html; charset=iso-8859-1";
+	// $headers[] = "From: noreply@homer.com";
+	// $headers[] = "Reply-To: noreply@homer.com<noreply@homer.com>";
+	// if (count($cc)){
+	// 	$ccs = implode(',', $cc);
+	// 	$headers[] = "Cc: $ccs";
+	// }
+	// $headers[] = "Subject: {$subject}";
+	// $headers[] = "X-Mailer: PHP/".phpversion();
 
-	return mail($to, $subject, $content, implode("\r\n", $headers));
+	// return mail($to, $subject, $content, implode("\r\n", $headers));
+	send_mailgun($to, $subject, $content);
 }
 
 function qbGenerateSession() {
@@ -268,6 +269,57 @@ function upload($image_category){
 	$result['path'] = $target_file;
 	$result['name'] = $_FILES['image']['name'];
 	return $result;
+}
+
+function send_mailgun($to, $subject, $body){
+ 
+ 	echo 'test','<br>';
+	$config = array();
+ 
+	$config['api_key'] = "key-1b3d22c7b50b7182b478ce190e6a7a81";
+ 
+	$config['api_url'] = "https://api.mailgun.net/v3/sandboxc6e19469cd9f420cbda5e5e7d7e8694f.mailgun.org/messages";
+ 
+	$message = array();
+ 
+	$message['from'] = "noreply@homer.com;";
+ 
+	$message['to'] = $to;
+ 
+	$message['h:Reply-To'] = "noreply@homer.com";
+ 
+	$message['subject'] = $subject;
+ 
+	$message['html'] = $body;
+ 
+	$ch = curl_init();
+ 
+	curl_setopt($ch, CURLOPT_URL, $config['api_url']);
+ 
+	curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+ 
+	curl_setopt($ch, CURLOPT_USERPWD, "api:{$config['api_key']}");
+ 
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+ 
+	curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+ 
+	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+ 
+	curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+ 
+	curl_setopt($ch, CURLOPT_POST, true); 
+ 
+	curl_setopt($ch, CURLOPT_POSTFIELDS,$message);
+ 
+	$result = curl_exec($ch);
+ 
+	curl_close($ch);
+
+	echo $result;
+
+	return $result;
+ 
 }
 
 ?>

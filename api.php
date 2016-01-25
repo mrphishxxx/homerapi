@@ -1072,15 +1072,16 @@ function api_test(){
 	//     echo $result;
 	// }
 	// curl_close($ch);
-	$account_sid = 'AC9937d29c6659b015a408cf849e5aa611'; 
-	$auth_token = '5ecc8903da4ad3913e380025f75a82b3'; 
-	$client = new Services_Twilio($account_sid, $auth_token); 
+	// $account_sid = 'AC9937d29c6659b015a408cf849e5aa611'; 
+	// $auth_token = '5ecc8903da4ad3913e380025f75a82b3'; 
+	// $client = new Services_Twilio($account_sid, $auth_token); 
  
-	$client->account->messages->create(array( 
-		'To' => "+8615840572747", 
-		'From' => "+18559729840", 
-		'Body' => "hello",   
-	));
+	// $client->account->messages->create(array( 
+	// 	'To' => "+8615840572747", 
+	// 	'From' => "+18559729840", 
+	// 	'Body' => "hello",   
+	// ));
+	send_mailgun('alexjin9317@outlook.com', 'hello', 'this is a test');
 }
 
 ?>

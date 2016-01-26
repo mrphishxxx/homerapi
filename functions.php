@@ -71,10 +71,13 @@ function __register($full_name, $email, $pswd, $facebook=NULL, $google=NULL){
 
     $token = qbGenerateSession();
     $user->quickblox_id = qbSignupUser($token, '', $email, $full_name, QB_USER_PASS)->id;
-    
-    $user->save();
 
-    return true;
+    if ($user->quickblox_id != NULL){
+      $user->save();
+      return true;
+    } else{
+      return false;
+    }
   } else{
     return false;
   }

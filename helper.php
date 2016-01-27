@@ -316,8 +316,6 @@ function send_mailgun($to, $subject, $body){
  
 	curl_close($ch);
 
-	echo $result;
-
 	return $result;
  
 }

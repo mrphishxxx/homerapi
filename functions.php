@@ -94,7 +94,7 @@ function __reserve_reset($email){
     $msg = "We've received your request for password reset. <br/> Please remember the code below and use it in your app for password reset verification.<br> Code : " . $user->password_reset;
     
     sendEmail($user->email, 'Password Reset', $msg);
-    return false;
+    return true;
   }
 }
 

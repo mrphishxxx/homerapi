@@ -967,6 +967,8 @@ function api_verify_phone(){
 					$result['message'] = "You haven't requested verification.";
 				} else if ($r == -1){
 					$result['message'] = "This code is expired. please request another one.";
+				} else{
+					$result['message'] = "Wrong code.";
 				}
 			}
 		}

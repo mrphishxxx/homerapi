@@ -1037,13 +1037,13 @@ function api_verify_email(){
 					'message' => 'Successfully verified email.'
 					);
 			} else{
-				$result['success'] = 'false';
+				$result = array('success' => 'false');
 				if ($r == -2){
 					$result['message'] = "You haven't requested verification.";
 				} else if ($r == -1){
 					$result['message'] = "This code is expired. please request another one.";
 				} else {
-					$result['message'] = "This code is wrong."
+					$result['message'] = "This code is wrong.";
 				}
 			}
 		}

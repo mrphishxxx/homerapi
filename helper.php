@@ -273,7 +273,6 @@ function upload($image_category){
 
 function send_mailgun($to, $subject, $body){
  
- 	echo 'test','<br>';
 	$config = array();
  
 	$config['api_key'] = "key-1b3d22c7b50b7182b478ce190e6a7a81";

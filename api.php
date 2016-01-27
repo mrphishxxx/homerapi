@@ -1029,7 +1029,7 @@ function api_verify_email(){
 				'message' => 'Invalid token',
 				);
 		} else{
-			$r = __reserve_verification($user->id, 'email');
+			$r = __verify_user($user->id, 'email', $code);
 
 			if ($r == 1){
 				$result = array(
@@ -1042,6 +1042,8 @@ function api_verify_email(){
 					$result['message'] = "You haven't requested verification.";
 				} else if ($r == -1){
 					$result['message'] = "This code is expired. please request another one.";
+				} else {
+					$result['message'] = "This code is wrong."
 				}
 			}
 		}

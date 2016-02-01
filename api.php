@@ -299,7 +299,7 @@ function api_get_own_posts(){
 				'description' => $post->description,
 				'post_date' => $post->post_time,
 				'num_new_match' => $matches->whereNotIn('id', $seenIds)->count(),
-				'num_match' =< $matches->count(),
+				'num_match' => $matches->count(),
 				);
 			$rposts[] = $rpost;
 		}
@@ -361,7 +361,7 @@ function api_get_all_posts(){
 				'agent_avatar' => $post->user->avatar,
 				'quickblox_id' => $post->user->quickblox_id,
 				'num_new_match' => $matches->whereNotIn('id', $seenIds)->count(),
-				'num_match' =< $matches->count(),
+				'num_match' => $matches->count(),
 				);
 
 			$seenPosts = $user->viewedPosts;

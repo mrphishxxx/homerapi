@@ -285,7 +285,8 @@ function api_get_own_posts(){
 		$rposts = array();
 		foreach ($posts as $post){
 			$matches = $post->matchingPosts();
-			$totalMatch += $matches->count();
+			$matchCnt = $matches->count();
+			$totalMatch += $matchCnt;
 			$rpost = array(
 				'post_id' => $post->id,
 				'post_type' => $post->post_type,
@@ -299,7 +300,7 @@ function api_get_own_posts(){
 				'description' => $post->description,
 				'post_date' => $post->post_time,
 				'num_new_match' => $matches->whereNotIn('id', $seenIds)->count(),
-				'num_match' => $matches->count(),
+				'num_match' => $matchCnt,
 				);
 			$rposts[] = $rpost;
 		}
@@ -342,7 +343,8 @@ function api_get_all_posts(){
 		$rposts = array();
 		foreach ($posts as $post){
 			$matches = $post->matchingPosts();
-			$totalMatch += $matches->count();
+			$matchCnt = $matches->count();
+			$totalMatch += $matchCnt;
 
 			$rpost = array(
 				'post_id' => $post->id,
@@ -361,7 +363,7 @@ function api_get_all_posts(){
 				'agent_avatar' => $post->user->avatar,
 				'quickblox_id' => $post->user->quickblox_id,
 				'num_new_match' => $matches->whereNotIn('id', $seenIds)->count(),
-				'num_match' => $matches->count(),
+				'num_match' => $matchCnt,
 				);
 
 			$seenPosts = $user->viewedPosts;

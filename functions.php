@@ -219,7 +219,7 @@ function __process_post($post){
       $m->matchedPosts()->detach($post->id);
       $m->matchedPosts()->attach($post->id);
     }
-    $user = $post->user;
+    $user = $m->user;
     foreach ($user->logins as $login){
       if ($login->push_type == 2){
         if ($login->push_token == NULL || strlen($login->push_token) < 10){

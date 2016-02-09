@@ -340,6 +340,8 @@ function api_get_all_posts(){
 			$seenIds[] = $p->id;
 		}
 
+		$totalMatch = 0;
+
 		$rposts = array();
 		foreach ($posts as $post){
 			$matches = $post->matchingPosts()->whereRaw('CoordinateDistanceKM(lat, lng, ' . $post->lat . ', ' . $post->lng . ') < 5');
@@ -365,13 +367,6 @@ function api_get_all_posts(){
 				'num_new_match' => $matches->whereNotIn('id', $seenIds)->count(),
 				'num_match' => $matchCnt,
 				);
-
-			$seenPosts = $user->viewedPosts;
-			$seenIds = array();
-			$totalMatch = 0;
-			
-
-
 
 			$rposts[] = $rpost;
 		}

@@ -126,8 +126,14 @@ function __add_post($uid, $post_type, $property_type, $location, $num_rooms, $ar
   $post->price = $price;
   $post->description = $description;
   $r = getCoordinate($location);
-  $post->lat = $r->results[0]->geometry->location->lat;
-  $post->lng = $r->results[0]->geometry->location->lng;
+
+  if (count($r->results) > 0){
+    $post->lat = $r->results[0]->geometry->location->lat;
+    $post->lng = $r->results[0]->geometry->location->lng;
+  } else {
+    $post->lat = NULL;
+    $post->lng = NULL;
+  }
   $user->posts()->save($post);
 
   __process_post($post); // processes similar matches and finding matches

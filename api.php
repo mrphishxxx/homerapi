@@ -419,7 +419,7 @@ function api_get_own_post_detail(){
 				$sql = "select *, CoordinateDistanceKM(lat, lng, ?, ?) as dist from `posts` 
 						inner join `matchingposts` 
 							on `posts`.`id` = `matchingposts`.`post_to` 
-						where `matchingposts`.`post_from` = ? 
+						where `matchingposts`.`post_to` = ? 
 							and `posts`.`deleted_at` is null 
 						order by CoordinateDistanceKM(lat, lng, ?, ?) asc;";
 
@@ -520,7 +520,7 @@ function api_get_post_detail(){
 				$sql = "select *, CoordinateDistanceKM(lat, lng, ?, ?) as dist from `posts` 
 						inner join `matchingposts` 
 							on `posts`.`id` = `matchingposts`.`post_to` 
-						where `matchingposts`.`post_from` = ? 
+						where `matchingposts`.`post_to` = ? 
 							and `posts`.`deleted_at` is null 
 							and CoordinateDistanceKM(lat, lng, ?, ?) < 5 
 						order by CoordinateDistanceKM(lat, lng, ?, ?) asc;";

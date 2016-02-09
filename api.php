@@ -342,7 +342,7 @@ function api_get_all_posts(){
 
 		$rposts = array();
 		foreach ($posts as $post){
-			$matches = $post->matchingPosts();
+			$matches = $post->matchingPosts()->whereRaw('CoordinateDistanceKM(lat, lng, ' . $post->lat . ', ' . $post->lng . ') < 5');
 			$matchCnt = $matches->count();
 			$totalMatch += $matchCnt;
 
@@ -461,7 +461,7 @@ function api_get_own_post_detail(){
 						'is_new' => in_array($p->id, $seenIds),
 						'distance' => $t->dist
 						);
-					if ($post->dist > 5){
+					if ($t->dist > 5){
 						$sarray[] = $m;
 					} else{
 						$marray[] = $m;
@@ -545,6 +545,9 @@ function api_get_post_detail(){
 				$marray = array();
 				$sarray = array();
 				foreach ($matchings as $p){
+					if ($p->dist > 5){
+						continue;
+					}
 					$post = Post::find($p->id);
 					$m = array(
 						'post_id' => $post->id,
@@ -568,6 +571,9 @@ function api_get_post_detail(){
 				}
 
 				foreach ($similars as $p) {
+					if ($p->dist > 5){
+						continue;
+					}
 					$post = Post::find($p->id);
 					$s = array(
 						'post_id' => $post->id,

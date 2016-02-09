@@ -334,7 +334,7 @@ function api_get_all_posts(){
 			);
 	} else{
 		$posts = Post::orderBy('id', 'desc')->get();
-
+		$seenPosts = $user->viewedPosts;
 		$seenIds = array();
 		foreach ($seenPosts as $p){
 			$seenIds[] = $p->id;

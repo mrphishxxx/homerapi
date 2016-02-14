@@ -284,6 +284,10 @@ function api_get_own_posts(){
 
 		$rposts = array();
 		foreach ($posts as $post){
+			if ($post->lat == NULL){
+				$post->lat = 999;
+				$post->lng = 999; 
+			}
 			$matches = $post->matchingPosts()->whereRaw('CoordinateDistanceKM(lat, lng, ' . $post->lat . ', ' . $post->lng . ') < 5');
 			$matchCnt = $matches->count();
 			$totalMatch += $matchCnt;
@@ -344,6 +348,10 @@ function api_get_all_posts(){
 
 		$rposts = array();
 		foreach ($posts as $post){
+			if ($post->lat == NULL){
+				$post->lat = 999;
+				$post->lng = 999; 
+			}
 			$matches = $post->matchingPosts()->whereRaw('CoordinateDistanceKM(lat, lng, ' . $post->lat . ', ' . $post->lng . ') < 5');
 
 			$matchCnt = $matches->count();
@@ -419,8 +427,9 @@ function api_get_own_post_detail(){
 				$sql = "select *, CoordinateDistanceKM(lat, lng, ?, ?) as dist from `posts` 
 						inner join `matchingposts` 
 							on `posts`.`id` = `matchingposts`.`post_to` 
-						where `matchingposts`.`post_to` = ? 
+						where `matchingposts`.`post_from` = ? 
 							and `posts`.`deleted_at` is null 
+							and CoordinateDistanceKM(lat, lng, ?, ?) < 5 
 						order by CoordinateDistanceKM(lat, lng, ?, ?) asc;";
 
 				global $capsule;
@@ -505,8 +514,8 @@ function api_get_post_detail(){
 				'message' => 'Invalid token',
 				);
 		} else{
-			$post = Post::find($post_id);
-			if ($post == NULL){
+			$ppost = Post::find($post_id);
+			if ($ppost == NULL){
 				$result = array(
 					'success' => 'false',
 					'message' => 'No such post',
@@ -514,13 +523,13 @@ function api_get_post_detail(){
 			} else{
 //				$matchings = $post->matchingPosts()->whereRaw($dist)->orderByRaw($dist, 'asc')->limit(100)->get();// + $post->matchedPosts;
 //				$similars = $post->similarFrom()->whereRaw($dist)->orderByRaw($dist, 'asc')->limit(100)->get();// + $post->similarTo;
-				$lat = $post->lat;
-				$lng = $post->lng;
+				$lat = $ppost->lat;
+				$lng = $ppost->lng;
 
 				$sql = "select *, CoordinateDistanceKM(lat, lng, ?, ?) as dist from `posts` 
 						inner join `matchingposts` 
 							on `posts`.`id` = `matchingposts`.`post_to` 
-						where `matchingposts`.`post_to` = ? 
+						where `matchingposts`.`post_from` = ? 
 							and `posts`.`deleted_at` is null 
 							and CoordinateDistanceKM(lat, lng, ?, ?) < 5 
 						order by CoordinateDistanceKM(lat, lng, ?, ?) asc;";
@@ -562,6 +571,7 @@ function api_get_post_detail(){
 						'price' => $post->price,
 						'description' => $post->description,
 						'post_date' => $post->post_time,
+						'dist' => $p->dist
 						);
 					$marray[] = $m;
 				}
@@ -588,6 +598,7 @@ function api_get_post_detail(){
 						'price' => $post->price,
 						'description' => $post->description,
 						'post_date' => $post->post_time,
+						'dist' => $p->dist
 						);
 					$sarray[] = $s;
 				}
@@ -600,6 +611,7 @@ function api_get_post_detail(){
 					'data' => array(
 						'matchings' => $marray,
 						'similars' => $sarray,
+						'post' => $ppost
 						),
 					);
 			}

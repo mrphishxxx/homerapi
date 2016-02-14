@@ -421,6 +421,10 @@ function api_get_own_post_detail(){
 					'message' => 'No such post',
 					);
 			} else{
+				if ($post->lat == NULL){
+					$post->lat = 999;
+					$post->lng = 999; 
+				}
 				$lat = $post->lat;
 				$lng = $post->lng;
 
@@ -523,6 +527,10 @@ function api_get_post_detail(){
 			} else{
 //				$matchings = $post->matchingPosts()->whereRaw($dist)->orderByRaw($dist, 'asc')->limit(100)->get();// + $post->matchedPosts;
 //				$similars = $post->similarFrom()->whereRaw($dist)->orderByRaw($dist, 'asc')->limit(100)->get();// + $post->similarTo;
+				if ($post->lat == NULL){
+					$post->lat = 999;
+					$post->lng = 999; 
+				}
 				$lat = $ppost->lat;
 				$lng = $ppost->lng;
 

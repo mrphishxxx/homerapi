@@ -433,7 +433,7 @@ function api_get_own_post_detail(){
 						order by CoordinateDistanceKM(lat, lng, ?, ?) asc;";
 
 				global $capsule;
-				$totalMatchings = $capsule->connection()->select($sql, [$lat, $lng, $post_id, $lat, $lng]);
+				$totalMatchings = $capsule->connection()->select($sql, [$lat, $lng, $post_id, $lat, $lng, $lat, $lng]);
 
 				
 				$seenPosts = $user->viewedPosts;

@@ -433,11 +433,10 @@ function api_get_own_post_detail(){
 							on `posts`.`id` = `matchingposts`.`post_to` 
 						where `matchingposts`.`post_from` = ? 
 							and `posts`.`deleted_at` is null 
-							and CoordinateDistanceKM(lat, lng, ?, ?) < 5 
 						order by CoordinateDistanceKM(lat, lng, ?, ?) asc;";
 
 				global $capsule;
-				$totalMatchings = $capsule->connection()->select($sql, [$lat, $lng, $post_id, $lat, $lng, $lat, $lng]);
+				$totalMatchings = $capsule->connection()->select($sql, [$lat, $lng, $post_id, $lat, $lng]);
 
 				
 				$seenPosts = $user->viewedPosts;

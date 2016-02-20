@@ -288,7 +288,7 @@ function api_get_own_posts(){
 				$post->lat = 999;
 				$post->lng = 999; 
 			}
-			$matches = $post->matchingPosts()->whereRaw('CoordinateDistanceKM(lat, lng, ' . $post->lat . ', ' . $post->lng . ') < 5');
+			$matches = $post->matchedPosts()->whereRaw('CoordinateDistanceKM(lat, lng, ' . $post->lat . ', ' . $post->lng . ') < 5');
 			$matchCnt = $matches->count();
 			$totalMatch += $matchCnt;
 			$rpost = array(
@@ -352,7 +352,7 @@ function api_get_all_posts(){
 				$post->lat = 999;
 				$post->lng = 999; 
 			}
-			$matches = $post->matchingPosts()->whereRaw('CoordinateDistanceKM(lat, lng, ' . $post->lat . ', ' . $post->lng . ') < 5');
+			$matches = $post->matchedPosts()->whereRaw('CoordinateDistanceKM(lat, lng, ' . $post->lat . ', ' . $post->lng . ') < 5');
 
 			$matchCnt = $matches->count();
 			$totalMatch += $matchCnt;

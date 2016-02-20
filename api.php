@@ -1094,6 +1094,39 @@ function api_verify_email(){
 	echo json_encode($result);
 }
 
+/**
+ * @api {post} /user/request-email-verification Request Email verification
+ * @apiVersion 1.0.0
+ * @apiName Request Email verification
+ * @apiGroup User
+ * 
+ * @apiHeader {String} Authorization Users unique access-key.
+*/
+function api_user_images(){
+	$result = array();
+	$token = $_SERVER['Authorization'];
+	$user = __get_user_from_token($token);
+	if ($user == NULL){
+		$result = array(
+			'success' => 'false',
+			'message' => 'Invalid token',
+			);
+	} else{
+		$users = User::all();
+		$data = array();
+		foreach ($users as $u){
+			$data[] = array(
+				'avatar' => $user->avatar,
+				'quickblox_id' => $user->quickblox_id,
+				);
+		}
+		$result['success'] = 'true';
+		$result['message'] = "Successfully fetched avatar info";
+		$result['avatars'] = $data;
+	}
+	echo json_encode($result);
+}
+
 
 
 

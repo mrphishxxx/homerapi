@@ -71,6 +71,9 @@ switch ($path){
 	case '/user/verify-email':
 		api_verify_email();
 		break;
+	case '/user/images':
+		api_user_images();
+		break;
 	case '/test':
 		api_test();
 		break;

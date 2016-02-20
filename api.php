@@ -1116,8 +1116,8 @@ function api_user_images(){
 		$data = array();
 		foreach ($users as $u){
 			$data[] = array(
-				'avatar' => $user->avatar,
-				'quickblox_id' => $user->quickblox_id,
+				'avatar' => $u->avatar,
+				'quickblox_id' => $u->quickblox_id,
 				);
 		}
 		$result['success'] = 'true';

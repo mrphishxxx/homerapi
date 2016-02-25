@@ -474,6 +474,7 @@ function api_get_own_post_detail(){
 					} else{
 						$marray[] = $m;
 					}
+					__view_post($user->id, $p->id);
 				}
 
 				__view_post($user->id, $post->id);

@@ -277,7 +277,7 @@ function api_get_own_posts(){
 		$posts = $user->posts()->orderBy('id', 'desc')->get();
 		$seenPosts = $user->viewedPosts;
 		$seenIds = array();
-		$totalMatch = 0;
+		$totalNewMatch = 0;
 		foreach ($seenPosts as $p){
 			$seenIds[] = $p->id;
 		}
@@ -290,7 +290,8 @@ function api_get_own_posts(){
 			}
 			$matches = $post->matchedPosts()->whereRaw('CoordinateDistanceKM(lat, lng, ' . $post->lat . ', ' . $post->lng . ') < 5');
 			$matchCnt = $matches->count();
-			$totalMatch += $matchCnt;
+			$newMatchCnt = $matches->whereNotIn('id', $seenIds)->count();
+			$totalNewMatch += $newMatchCnt;
 			$rpost = array(
 				'post_id' => $post->id,
 				'post_type' => $post->post_type,
@@ -303,7 +304,7 @@ function api_get_own_posts(){
 				'price' => $post->price,
 				'description' => $post->description,
 				'post_date' => $post->post_time,
-				'num_new_match' => $matches->whereNotIn('id', $seenIds)->count(),
+				'num_new_match' => $newMatchCnt,
 				'num_match' => $matchCnt,
 				);
 			$rposts[] = $rpost;
@@ -314,7 +315,7 @@ function api_get_own_posts(){
 			'message' => 'Successfully fetched'
 			);
 
-		$result['data']['total_num_new_match'] = $totalMatch;
+		$result['data']['total_num_new_match'] = $totalNewMatch;
 		$result['data']['posts'] = $rposts;
 	}
 	echo json_encode($result);

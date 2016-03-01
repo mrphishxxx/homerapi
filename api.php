@@ -429,7 +429,7 @@ function api_get_own_post_detail(){
 				$lat = $post->lat;
 				$lng = $post->lng;
 
-				$sql = "select *, CoordinateDistanceKM(lat, lng, ?, ?) as dist, matchingposts.id as mid from `posts` 
+				$sql = "select posts.*, CoordinateDistanceKM(lat, lng, ?, ?) as dist, matchingposts.id as mid from `posts` 
 						inner join `matchingposts` 
 							on `posts`.`id` = `matchingposts`.`post_to` 
 						where `matchingposts`.`post_from` = ? 

@@ -429,7 +429,7 @@ function api_get_own_post_detail(){
 				$lat = $post->lat;
 				$lng = $post->lng;
 
-				$sql = "select posts.*, CoordinateDistanceKM(lat, lng, ?, ?) as dist, matchingposts.id as mid from `posts` 
+				$sql = "select posts.*, CoordinateDistanceKM(lat, lng, ?, ?) as dist, matchingposts.mid as mid from `posts` 
 						inner join `matchingposts` 
 							on `posts`.`id` = `matchingposts`.`post_to` 
 						where `matchingposts`.`post_from` = ? 
@@ -535,7 +535,7 @@ function api_get_post_detail(){
 				$lat = $ppost->lat;
 				$lng = $ppost->lng;
 
-				$sql = "select *, CoordinateDistanceKM(lat, lng, ?, ?) as dist from `posts` 
+				$sql = "select posts.*, CoordinateDistanceKM(lat, lng, ?, ?) as dist from `posts` 
 						inner join `matchingposts` 
 							on `posts`.`id` = `matchingposts`.`post_to` 
 						where `matchingposts`.`post_from` = ? 
@@ -545,7 +545,7 @@ function api_get_post_detail(){
 
 				$matchings = $capsule->connection()->select($sql, [$lat, $lng, $post_id, $lat, $lng, $lat, $lng]);
 
-				$sql = "select *, CoordinateDistanceKM(lat, lng, ?, ?) as dist from `posts` 
+				$sql = "select posts.*, CoordinateDistanceKM(lat, lng, ?, ?) as dist from `posts` 
 						inner join `similarposts` 
 							on `posts`.`id` = `similarposts`.`post_to` 
 						where `similarposts`.`post_from` = ?

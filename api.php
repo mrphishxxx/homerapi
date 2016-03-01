@@ -279,7 +279,7 @@ function api_get_own_posts(){
 		$seenIds = array();
 		$totalNewMatch = 0;
 		foreach ($seenPosts as $p){
-			$seenIds[] = $p->id;
+			$seenIds[] = $p->mid;
 		}
 
 		$rposts = array();
@@ -290,7 +290,7 @@ function api_get_own_posts(){
 			}
 			$matches = $post->matchedPosts()->whereRaw('CoordinateDistanceKM(lat, lng, ' . $post->lat . ', ' . $post->lng . ') < 5');
 			$matchCnt = $matches->count();
-			$newMatchCnt = $matches->whereNotIn('id', $seenIds)->count();
+			$newMatchCnt = $matches->whereNotIn('mid', $seenIds)->count();
 			$totalNewMatch += $newMatchCnt;
 			$rpost = array(
 				'post_id' => $post->id,
@@ -342,7 +342,7 @@ function api_get_all_posts(){
 		$seenPosts = $user->viewedPosts;
 		$seenIds = array();
 		foreach ($seenPosts as $p){
-			$seenIds[] = $p->id;
+			$seenIds[] = $p->mid;
 		}
 
 		$totalMatch = 0;
@@ -374,7 +374,7 @@ function api_get_all_posts(){
 				'agent_name' => $post->user->full_name,
 				'agent_avatar' => $post->user->avatar,
 				'quickblox_id' => $post->user->quickblox_id,
-				'num_new_match' => $matches->whereNotIn('id', $seenIds)->count(),
+				'num_new_match' => $matches->whereNotIn('mid', $seenIds)->count(),
 				'num_match' => $matchCnt,
 				);
 
@@ -443,7 +443,7 @@ function api_get_own_post_detail(){
 				$seenPosts = $user->viewedPosts;
 				$seenIds = array();
 				foreach ($seenPosts as $p){
-					$seenIds[] = $p->id;
+					$seenIds[] = $p->mid;
 				}
 
 				$marray = array();
@@ -467,7 +467,7 @@ function api_get_own_post_detail(){
 						'price' => $p->price,
 						'description' => $p->description,
 						'post_date' => $p->post_time,
-						'is_new' => in_array($p->id, $seenIds),
+						'is_new' => in_array($t->mid, $seenIds),
 						'distance' => $t->dist
 						);
 					if ($t->dist > 5){

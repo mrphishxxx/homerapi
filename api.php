@@ -429,7 +429,7 @@ function api_get_own_post_detail(){
 				$lat = $post->lat;
 				$lng = $post->lng;
 
-				$sql = "select *, CoordinateDistanceKM(lat, lng, ?, ?) as dist from `posts` 
+				$sql = "select *, CoordinateDistanceKM(lat, lng, ?, ?) as dist, matchingposts.id as mid from `posts` 
 						inner join `matchingposts` 
 							on `posts`.`id` = `matchingposts`.`post_to` 
 						where `matchingposts`.`post_from` = ? 
@@ -475,10 +475,10 @@ function api_get_own_post_detail(){
 					} else{
 						$marray[] = $m;
 					}
-					__view_post($user->id, $p->id);
+					__view_match_post($user->id, $t->mid);
 				}
 
-				__view_post($user->id, $post->id);
+				// __view_match_post($user->id, $post->id);
 
 				$result = array(
 					'success' => 'true',
@@ -612,7 +612,7 @@ function api_get_post_detail(){
 					$sarray[] = $s;
 				}
 
-				__view_post($user->id, $post->id);
+				// __view_match_post($user->id, $post->id);
 
 				$result = array(
 					'success' => 'true',

@@ -242,10 +242,10 @@ function __process_post($post){
   sendGcmMessage($message, $devices);
 }
 
-function __view_post($user_id, $post_id){
+function __view_match_post($user_id, $mpost_id){
   $user = User::find($user_id);
-  $user->viewedPosts()->detach($post_id);
-  $user->viewedPosts()->attach($post_id);
+  $user->viewedPosts()->detach($mpost_id);
+  $user->viewedPosts()->attach($mpost_id);
 }
 
 function __reserve_verification($user_id, $verification_type){

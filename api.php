@@ -468,10 +468,10 @@ function api_get_own_post_detail(){
 						'price' => $p->price,
 						'description' => $p->description,
 						'post_date' => $p->post_time,
-						'is_new' => in_array($t->mid, $seenIds),
+						'is_new' => in_array($t->mid, $seenIds) && ($t->dist < 5),
 						'distance' => $t->dist
 						);
-					if (in_array($t->mid, $seenIds)){
+					if ($m->is_new){
 						$numNewMatch++;
 					}
 					if ($t->dist > 5){

@@ -490,7 +490,7 @@ function api_get_own_post_detail(){
 					'data' => array(
 						'matchings' => $marray,
 						'seealso' => $sarray,
-						'num_new_match' => $numNewMatch;
+						'num_new_match' => $numNewMatch
 						),
 					);
 			}

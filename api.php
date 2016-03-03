@@ -448,6 +448,7 @@ function api_get_own_post_detail(){
 
 				$marray = array();
 				$sarray = array();
+				$numNewMatch = 0;
 				foreach ($totalMatchings as $t){
 					$p = Post::find($t->id);
 					$m = array(
@@ -470,6 +471,9 @@ function api_get_own_post_detail(){
 						'is_new' => in_array($t->mid, $seenIds),
 						'distance' => $t->dist
 						);
+					if (in_array($t->mid, $seenIds)){
+						$numNewMatch++;
+					}
 					if ($t->dist > 5){
 						$sarray[] = $m;
 					} else{
@@ -486,6 +490,7 @@ function api_get_own_post_detail(){
 					'data' => array(
 						'matchings' => $marray,
 						'seealso' => $sarray,
+						'num_new_match' => $numNewMatch;
 						),
 					);
 			}
@@ -1120,6 +1125,7 @@ function api_user_images(){
 			$data[] = array(
 				'avatar' => $u->avatar,
 				'quickblox_id' => $u->quickblox_id,
+				'agent_id' => $u->id,
 				);
 		}
 		$result['success'] = 'true';

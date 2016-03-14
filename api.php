@@ -306,6 +306,8 @@ function api_get_own_posts(){
 				'post_date' => $post->post_time,
 				'num_new_match' => $newMatchCnt,
 				'num_match' => $matchCnt,
+				'created_at' => $post->created_at,
+				'updated_at' => $post->updated_at
 				);
 			$rposts[] = $rpost;
 		}
@@ -376,6 +378,8 @@ function api_get_all_posts(){
 				'quickblox_id' => $post->user->quickblox_id,
 				'num_new_match' => $matches->whereNotIn('mid', $seenIds)->count(),
 				'num_match' => $matchCnt,
+				'created_at' => $post->created_at,
+				'updated_at' => $post->updated_at
 				);
 
 			$rposts[] = $rpost;
@@ -469,7 +473,9 @@ function api_get_own_post_detail(){
 						'description' => $p->description,
 						'post_date' => $p->post_time,
 						'is_new' => in_array($t->mid, $seenIds) && ($t->dist < 5),
-						'distance' => $t->dist
+						'distance' => $t->dist,
+						'created_at' => $post->created_at,
+						'updated_at' => $post->updated_at
 						);
 					if ($m->is_new){
 						$numNewMatch++;
@@ -585,7 +591,9 @@ function api_get_post_detail(){
 						'price' => $post->price,
 						'description' => $post->description,
 						'post_date' => $post->post_time,
-						'dist' => $p->dist
+						'dist' => $p->dist,
+						'created_at' => $post->created_at,
+						'updated_at' => $post->updated_at
 						);
 					$marray[] = $m;
 				}
@@ -612,7 +620,9 @@ function api_get_post_detail(){
 						'price' => $post->price,
 						'description' => $post->description,
 						'post_date' => $post->post_time,
-						'dist' => $p->dist
+						'dist' => $p->dist,
+						'created_at' => $post->created_at,
+						'updated_at' => $post->updated_at
 						);
 					$sarray[] = $s;
 				}

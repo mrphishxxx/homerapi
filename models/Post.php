@@ -9,7 +9,7 @@ class Post extends Eloquent{
 	
 	protected $hidden = ['matchedPosts', 'matchingPosts', 'similarTo', 'similarFrom'];
 
-	protected $appends = ['post_time'];
+	protected $appends = ['post_time', 'update_time'];
 
 	public function user(){
 		return $this->belongsTo('User', 'user_id');
@@ -18,6 +18,13 @@ class Post extends Eloquent{
 	public function getPostTimeAttribute(){
 		if ($this->created_at != NULL){
 			return time_elapsed_string($this->created_at);
+		}
+		return '';
+	}
+
+	public function getUpdateTimeAttribute(){
+		if ($this->updated_at != NULL){
+			return time_elapsed_string($this->updated_at);
 		}
 		return '';
 	}

@@ -306,8 +306,7 @@ function api_get_own_posts(){
 				'post_date' => $post->post_time,
 				'num_new_match' => $newMatchCnt,
 				'num_match' => $matchCnt,
-				'created_at' => $post->created_at,
-				'updated_at' => $post->updated_at
+				'update_date' => $post->update_time
 				);
 			$rposts[] = $rpost;
 		}
@@ -379,7 +378,7 @@ function api_get_all_posts(){
 				'num_new_match' => $matches->whereNotIn('mid', $seenIds)->count(),
 				'num_match' => $matchCnt,
 				'created_at' => $post->created_at,
-				'updated_at' => $post->updated_at
+				'update_date' => $post->update_time
 				);
 
 			$rposts[] = $rpost;
@@ -475,7 +474,7 @@ function api_get_own_post_detail(){
 						'is_new' => in_array($t->mid, $seenIds) && ($t->dist < 5),
 						'distance' => $t->dist,
 						'created_at' => $post->created_at,
-						'updated_at' => $post->updated_at
+						'update_date' => $post->update_time
 						);
 					if ($m->is_new){
 						$numNewMatch++;
@@ -593,7 +592,7 @@ function api_get_post_detail(){
 						'post_date' => $post->post_time,
 						'dist' => $p->dist,
 						'created_at' => $post->created_at,
-						'updated_at' => $post->updated_at
+						'update_date' => $post->update_time
 						);
 					$marray[] = $m;
 				}
@@ -622,7 +621,7 @@ function api_get_post_detail(){
 						'post_date' => $post->post_time,
 						'dist' => $p->dist,
 						'created_at' => $post->created_at,
-						'updated_at' => $post->updated_at
+						'update_date' => $post->update_time
 						);
 					$sarray[] = $s;
 				}

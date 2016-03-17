@@ -147,6 +147,11 @@ function __edit_post($uid, $post_id, $post_type, $property_type, $location, $num
 
   $user->viewedPosts()->detach($post->id);
 
+  if ($post->post_type != $post_type){
+    SimilarPost::where('post_from', $post->id)->delete();       // if post type had been changed, similar / matching relationship would have been broken.
+    MatchingPost::where('post_from', $post->id)->delete();
+  }
+  
   $post->post_type = $post_type;
   $post->property_type = $property_type;
   $post->num_rooms = $num_rooms;
@@ -166,11 +171,12 @@ function __edit_post($uid, $post_id, $post_type, $property_type, $location, $num
   return $post;
 }
 
-function __rate_user($fromid, $toid, $score){
+function __rate_user($fromid, $toid, $score, $comment){
   $rating = new UserRating;
   $rating->user_from = $fromid;
   $rating->user_to = $toid;
   $rating->score = $score;
+  $rating->comment = $comment;
   $rating->save();
 }
 
@@ -184,9 +190,6 @@ function __get_user_from_token($token){
 }
 
 function __process_post($post){
-
-  SimilarPost::where('post_from', $post->id)->delete();
-  MatchingPost::where('post_from', $post->id)->delete();
 
   // finding similar matches
 
@@ -202,10 +205,11 @@ function __process_post($post){
                   ->get();
 
   foreach ($similars as $s){
-    $post->similarTo()->attach($s->id);
+    $dist = distance($post->lat, $post->lng, $s->lat, $s->lng); 
+    $post->similarTo()->attach($s->id, ['dist' => $dist, 'state' => 0]);
     if ($post->num_rooms == $s->num_rooms){
       $s->similarTo()->detach($post->id);
-      $s->similarTo()->attach($post->id);
+      $s->similarTo()->attach($post->id, ['dist' => $dist, 'state' => 0]);
     }
   }
 
@@ -216,23 +220,52 @@ function __process_post($post){
                   ->where('num_rooms', '>=', $post->num_rooms)
                   ->where('post_type', $ptype)
                   ->where('id', '<>', $post->id)
+                  ->where('user_id', '<>', $post->user_id)   // i won't regard mine as matching post
                   ->get();
   
   $devices = array();
   foreach ($matchings as $m){
-    $post->matchedPosts()->attach($m->id);
-    if ($post->num_rooms == $m->num_rooms){
-      $m->matchedPosts()->detach($post->id);
-      $m->matchedPosts()->attach($post->id);
+    $dist = distance($post->lat, $post->lng, $m->lat, $m->lng); 
+    $match = MatchingPost::where('post_from', $post->id)->where('post_to', $m->id)->first();
+     
+    if (match == NULL){
+        $match = new MatchingPost;
+        $match->post_from = $post->id;
+        $match->post_to = $m->id;
+        $match->dist = $dist;
+        $match->state = 0;
+        $match->save();
+    } else{ 
+        $match->dist = $dist;
     }
-    $user = $m->user;
-    foreach ($user->logins as $login){
-      if ($login->push_type == 2){
-        if ($login->push_token == NULL || strlen($login->push_token) < 10){
-          continue;
-        }
-        $devices[] = $login->push_token;
+    
+    if ($post->num_rooms == $m->num_rooms){
+      $amatch = MatchingPost::where('post_from', $m->id)->where('post_to', $post->id)->first();
+      if ($amatch == NULL){
+        $amatch = new MatchingPost;
+        $amatch->post_from = $m->id;
+        $amatch->post_to = $post->id;
+        $amatch->dist = $dist;
+        $amatch->state = 0;
+        $amatch->save();
+      } else{
+        $amatch->dist = $dist;
+        $amatch->save();
       }
+    }
+    
+    if ($match->state == 0 && $dist < 5){ // send notification to post owners within 5 km (distance between post and post)
+        $user = $m->user;
+        foreach ($user->logins as $login){
+            if ($login->push_type == 2){
+                if ($login->push_token == NULL || strlen($login->push_token) < 10){
+                continue;
+                }
+                $devices[] = $login->push_token;
+            }
+        }
+        $match->state = 1;
+        $match->save();
     }
   }
   if (count($devices) == 0){

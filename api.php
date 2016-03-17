@@ -288,9 +288,13 @@ function api_get_own_posts(){
 				$post->lat = 999;
 				$post->lng = 999; 
 			}
-			$matches = $post->matchedPosts()->whereRaw('CoordinateDistanceKM(lat, lng, ' . $post->lat . ', ' . $post->lng . ') < 5');
+			//$matches = $post->matchedPosts()->whereRaw('CoordinateDistanceKM(lat, lng, ' . $post->lat . ', ' . $post->lng . ') < 5');
+            
+            $matches = MatchingPost::where('post_from', $post->id)->where('dist', '<', 5)->where('state', '<>', 2);
+            
 			$matchCnt = $matches->count();
 			$newMatchCnt = $matches->whereNotIn('mid', $seenIds)->count();
+            
 			$totalNewMatch += $newMatchCnt;
 			$rpost = array(
 				'post_id' => $post->id,
@@ -354,7 +358,9 @@ function api_get_all_posts(){
 				$post->lat = 999;
 				$post->lng = 999; 
 			}
-			$matches = $post->matchedPosts()->whereRaw('CoordinateDistanceKM(lat, lng, ' . $post->lat . ', ' . $post->lng . ') < 5');
+			//$matches = $post->matchedPosts()->whereRaw('CoordinateDistanceKM(lat, lng, ' . $post->lat . ', ' . $post->lng . ') < 5');
+            
+            $matches = MatchingPost::where('post_from', $post->id)->where('dist', '<', 5)->where('state', '<>', 2);
 
 			$matchCnt = $matches->count();
 			$totalMatch += $matchCnt;
@@ -432,15 +438,18 @@ function api_get_own_post_detail(){
 				$lat = $post->lat;
 				$lng = $post->lng;
 
-				$sql = "select posts.*, CoordinateDistanceKM(lat, lng, ?, ?) as dist, matchingposts.mid as mid from `posts` 
-						inner join `matchingposts` 
-							on `posts`.`id` = `matchingposts`.`post_to` 
-						where `matchingposts`.`post_from` = ? 
-							and `posts`.`deleted_at` is null 
-						order by CoordinateDistanceKM(lat, lng, ?, ?) asc;";
+				// $sql = "select posts.*, CoordinateDistanceKM(lat, lng, ?, ?) as dist, matchingposts.mid as mid from `posts` 
+				// 		inner join `matchingposts` 
+				// 			on `posts`.`id` = `matchingposts`.`post_to` 
+				// 		where `matchingposts`.`post_from` = ? 
+				// 			and `posts`.`deleted` is null 
+                //             and `matchingposts`.`delete_at` is null
+				// 		order by CoordinateDistanceKM(lat, lng, ?, ?) asc;";
 
-				global $capsule;
-				$totalMatchings = $capsule->connection()->select($sql, [$lat, $lng, $post_id, $lat, $lng]);
+				// global $capsule;
+				// $totalMatchings = $capsule->connection()->select($sql, [$lat, $lng, $post_id, $lat, $lng]);
+                
+                $totalMatchings = MatchingPost::where('post_from', $post->id)->where('state', '<>', 2)->orderBy('dist');
 
 				
 				$seenPosts = $user->viewedPosts;
@@ -453,7 +462,7 @@ function api_get_own_post_detail(){
 				$sarray = array();
 				$numNewMatch = 0;
 				foreach ($totalMatchings as $t){
-					$p = Post::find($t->id);
+					$p = Post::find($t->post_to);
 					$m = array(
 						'post_id' => $p->id,
 						'image_avatar' => $p->user->avatar,
@@ -473,8 +482,8 @@ function api_get_own_post_detail(){
 						'post_date' => $p->post_time,
 						'is_new' => in_array($t->mid, $seenIds) && ($t->dist < 5),
 						'distance' => $t->dist,
-						'created_at' => $post->created_at,
-						'update_date' => $post->update_time
+						'created_at' => $p->created_at,
+						'update_date' => $p->update_time
 						);
 					if ($m->is_new){
 						$numNewMatch++;
@@ -497,6 +506,7 @@ function api_get_own_post_detail(){
 						'seealso' => $sarray,
 						'num_new_match' => $numNewMatch
 						),
+                    'post' => $post,
 					);
 			}
 		}
@@ -536,8 +546,8 @@ function api_get_post_detail(){
 					'message' => 'No such post',
 					);
 			} else{
-//				$matchings = $post->matchingPosts()->whereRaw($dist)->orderByRaw($dist, 'asc')->limit(100)->get();// + $post->matchedPosts;
-//				$similars = $post->similarFrom()->whereRaw($dist)->orderByRaw($dist, 'asc')->limit(100)->get();// + $post->similarTo;
+            //$matchings = $post->matchingPosts()->whereRaw($dist)->orderByRaw($dist, 'asc')->limit(100)->get();// + $post->matchedPosts;
+            //$similars = $post->similarFrom()->whereRaw($dist)->orderByRaw($dist, 'asc')->limit(100)->get();// + $post->similarTo;
 				if ($post->lat == NULL){
 					$post->lat = 999;
 					$post->lng = 999; 
@@ -545,25 +555,31 @@ function api_get_post_detail(){
 				$lat = $ppost->lat;
 				$lng = $ppost->lng;
 
-				$sql = "select posts.*, CoordinateDistanceKM(lat, lng, ?, ?) as dist from `posts` 
-						inner join `matchingposts` 
-							on `posts`.`id` = `matchingposts`.`post_to` 
-						where `matchingposts`.`post_from` = ? 
-							and `posts`.`deleted_at` is null 
-							and CoordinateDistanceKM(lat, lng, ?, ?) < 5 
-						order by CoordinateDistanceKM(lat, lng, ?, ?) asc;";
+				// $sql = "select posts.*, CoordinateDistanceKM(lat, lng, ?, ?) as dist from `posts` 
+				// 		inner join `matchingposts` 
+				// 			on `posts`.`id` = `matchingposts`.`post_to` 
+				// 		where `matchingposts`.`post_from` = ? 
+				// 			and `posts`.`deleted_at` is null 
+                //             and `matchingposts`.`deleted` is null
+				// 			and CoordinateDistanceKM(lat, lng, ?, ?) < 5 
+				// 		order by CoordinateDistanceKM(lat, lng, ?, ?) asc;";
 
-				$matchings = $capsule->connection()->select($sql, [$lat, $lng, $post_id, $lat, $lng, $lat, $lng]);
+				// $matchings = $capsule->connection()->select($sql, [$lat, $lng, $post_id, $lat, $lng, $lat, $lng]);
+                
+                $matchings = MatchingPost::where('post_from', $post->id)->where('state', '<>', 2)->orderBy('dist');
 
-				$sql = "select posts.*, CoordinateDistanceKM(lat, lng, ?, ?) as dist from `posts` 
-						inner join `similarposts` 
-							on `posts`.`id` = `similarposts`.`post_to` 
-						where `similarposts`.`post_from` = ?
-							and `posts`.`deleted_at` is null 
-							and CoordinateDistanceKM(lat, lng, ?, ?) < 5 
-						order by CoordinateDistanceKM(lat, lng, ?, ?) asc;";
+				// $sql = "select posts.*, CoordinateDistanceKM(lat, lng, ?, ?) as dist from `posts` 
+				// 		inner join `similarposts` 
+				// 			on `posts`.`id` = `similarposts`.`post_to` 
+				// 		where `similarposts`.`post_from` = ?
+				// 			and `posts`.`deleted_at` is null 
+                //             and `matchingposts`.`deleted` is null
+				// 			and CoordinateDistanceKM(lat, lng, ?, ?) < 5 
+				// 		order by CoordinateDistanceKM(lat, lng, ?, ?) asc;";
 
-				$similars = $capsule->connection()->select($sql, [$lat, $lng, $post_id, $lat, $lng, $lat, $lng]);
+				// $similars = $capsule->connection()->select($sql, [$lat, $lng, $post_id, $lat, $lng, $lat, $lng]);
+                
+                $similars = SimilarPost::where('post_from', $post->id)->orderBy('dist');
 
 
 				$marray = array();
@@ -675,6 +691,49 @@ function api_delete_post(){
 					);
 			} else{
 				$post->delete();
+				$result = array(
+					'success' => 'true',
+					'message' => 'Successfully deleted',
+					);
+			}
+		}
+	}
+	echo json_encode($result);
+}
+
+/**
+ * @api {post} /post/delete_match Delete Post
+ * @apiVersion 1.0.0
+ * @apiName DeletePostFromMatchList
+ * @apiGroup Post
+ * 
+ * @apiHeader {String} Authorization Users unique access-key.
+ * @apiParam {Number} main_post_id Post ID
+ * @apiParam {Number} delete_post_id Post ID
+*/
+function api_delete_post_from_match(){
+	$params = ['main_post_id', 'delete_post_id'];
+	$result = validateParam($params);
+
+	if ($result === true){
+		$token = $_SERVER['Authorization'];
+		$user = __get_user_from_token($token);
+		extract($_POST);
+		if ($user == NULL){
+			$result = array(
+				'success' => 'false',
+				'message' => 'Invalid token',
+				);
+		} else{
+            $mp = MatchingPost::where('post_from', $main_post_id)->where('post_to', $delete_post_id)->first();
+			if ($mp == NULL){
+				$result = array(
+					'success' => 'false',
+					'message' => 'No such post',
+					);
+			} else{
+				$mp->deleted = 1;
+                $mp->save();
 				$result = array(
 					'success' => 'true',
 					'message' => 'Successfully deleted',
@@ -801,17 +860,24 @@ function api_get_user_profile(){
 					'message' => 'No such user',
 					);
 			} else{
+                $login = $user->logins()->first();
 				$result = array(
 					'success' => 'true',
 					'message' => 'Successfully fetched user profile',
 					'data' => array(
 						'name' => $user->full_name,
+                        'avatar' => $user->avatar,
 						'email_verified' => $user->email_verified,
 						'phone_verified' => $user->phone_verified,
 						'creci_verified' => $user->creci_verified,
 						'score' => $user->ratings()->avg('score'),
 						)
 					);
+                   if ($login == NULL){
+                       $result['data']['last_access'] = '';
+                   } else{
+                       $result['data']['last_access'] = date("jS F, Y", strtotime($login->updated_at));
+                   }
 			}
 		}
 	}
@@ -827,9 +893,10 @@ function api_get_user_profile(){
  * @apiHeader {String} Authorization Users unique access-key.
  * @apiParam {Number} score Score
  * @apiParam {Number} agent_id Agent id
+ * @apiParam {String} comment Comment
 */
 function api_rate_user(){
-	$params = ['agent_id', 'score'];
+	$params = ['agent_id', 'score', 'comment'];
 	$result = validateParam($params);
 
 	if ($result === true){
@@ -861,7 +928,7 @@ function api_rate_user(){
 							'message' => "You've already rated this user"
 						);
 					} else{
-						__rate_user($user->id, $tuser->id, $score);
+						__rate_user($user->id, $tuser->id, $score, $comment);
 						$result = array(
 							'success' => 'true',
 							'message' => "Successfully rated",

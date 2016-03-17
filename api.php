@@ -836,7 +836,7 @@ function api_get_my_profile(){
  * @apiGroup User
  * 
  * @apiHeader {String} Authorization Users unique access-key.
- * @apiParam {Number} agent_id Post ID
+ * @apiParam {Number} agent_id User ID
 */
 function api_get_user_profile(){
 	$params = ['agent_id'];
@@ -878,6 +878,71 @@ function api_get_user_profile(){
                    } else{
                        $result['data']['last_access'] = date("jS F, Y", strtotime($login->updated_at));
                    }
+			}
+		}
+	}
+	echo json_encode($result);
+}
+
+/**
+ * @api {post} /user/ratings Get User Ratings
+ * @apiVersion 1.0.0
+ * @apiName GetUserRatings
+ * @apiGroup User
+ * 
+ * @apiHeader {String} Authorization Users unique access-key.
+ * @apiParam {Number} agent_id User ID
+*/
+function api_get_user_ratings(){
+	$params = ['agent_id'];
+	$result = validateParam($params);
+
+	if ($result === true){
+		$token = $_SERVER['Authorization'];
+		$user = __get_user_from_token($token);
+		$result = array();
+		if ($user == NULL){
+			$result = array(
+				'success' => 'false',
+				'message' => 'Invalid Token',
+				);
+		} else{
+			extract($_POST);
+			$user = User::find($agent_id);
+			if ($user == NULL){
+				$result = array(
+					'success' => 'false',
+					'message' => 'No such user',
+					);
+			} else{
+                
+                $result = array(
+					'success' => 'true',
+					'message' => 'Successfully fetched user profile',
+					'data' => array(
+						'score' => $user->ratings()->avg('score'),
+                        'num_review' => $user->ratings()->count()
+						)
+					);
+                
+                $ratings = array();
+                foreach ($user->ratings as $rating){
+                    $r = array(
+                        'id' => $rating->id,
+                        'avatar' => $rating->userFrom->avatar,
+                        'name' => $rating->userFrom->full_name,
+                        'date' => date("jS F, Y", strtotime($rating->created_at)),
+                        'score' => $rating->score,
+                        'review_text' => $rating->comment,
+                    );
+                    if ($rating->reply != NULL){
+                        $r['reply_text'] = $rating->reply;
+                        $r['reply_date'] = date("jS F, Y", strtotime($rating->updated_at));
+                    } else{
+                        $r['reply_text'] = 'No reply';
+                        $r['reply_date'] = '';
+                    }
+                }
 			}
 		}
 	}
@@ -933,9 +998,78 @@ function api_rate_user(){
 							'success' => 'true',
 							'message' => "Successfully rated",
 							);
+                        if (count($devices) > 0){
+                            $message = $user->full_name . ' has just rated your post';
+                            sendGcmMessage($message, $devices);
+                        }
 					}
 				}
 			}
+		}
+	}
+
+	echo json_encode($result);
+}
+
+/**
+ * @api {post} /user/rate/reply Reply to rating
+ * @apiVersion 1.0.0
+ * @apiName ReplyRating
+ * @apiGroup User
+ * 
+ * @apiHeader {String} Authorization Users unique access-key.
+ * @apiParam {Number} rating_id Rating id
+ * @apiParam {String} reply reply
+*/
+function api_reply_rating(){
+	$params = ['rating_id', 'reply'];
+	$result = validateParam($params);
+
+	if ($result === true){
+		$token = $_SERVER['Authorization'];
+		$user = __get_user_from_token($token);
+		extract($_POST);
+		if ($user == NULL){
+			$result = array(
+				'success' => 'false',
+				'message' => 'Invalid token',
+				);
+		} else{
+            $rating = UserRating::find($rating_id);
+            if ($rating == NULL){
+                $result = array(
+                    'success' => 'false',
+                    'message' => 'No such rating to reply'
+                );
+            } else{
+                if ($rating->user_to != $user->id){
+                    $result = array(
+                        'success' => 'false',
+                        'message' => "You can't reply to rating that is not yours"                        
+                    );
+                } else{
+                    $rating->reply = $reply;
+                    $rating->save();
+                    
+                    foreach ($rating->userFrom->logins as $login){          // send notification to the user who rated this.
+                    if ($login->push_type == 2){
+                        if ($login->push_token == NULL || strlen($login->push_token) < 10){
+                        continue;
+                        }
+                        $devices[] = $login->push_token;
+                        
+                        if (count($devices) > 0){
+                            $message = $user->full_name . ' has just replied to your rating';
+                            sendGcmMessage($message, $devices);
+                        }                        
+                        $result = array(
+                            'success' => 'true',
+                            'message' => 'Successfully replied to the comment'
+                        );
+                    }
+                }
+                }
+            }
 		}
 	}
 

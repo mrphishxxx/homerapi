@@ -198,6 +198,7 @@ function invalidApi(){
 		));
 }
 
+/*
 function sendGcmMessage($message, $devTokens){
 	// First, instantiate the manager.
 	//
@@ -228,6 +229,7 @@ function sendGcmMessage($message, $devTokens){
 	$pushManager->add($push);
 	$pushManager->push(); // Returns a collection of notified devices
 }
+*/
 
 function upload($image_category){
 	$result = array();
@@ -339,7 +341,7 @@ function distance($lat1, $lon1, $lat2, $lon2, $unit) {
       }
 }
 
-public function sendGCMMessage($registration_ids, $content)
+function sendGCMMessage($registration_ids, $content)
 {
 
 	$fields = array(

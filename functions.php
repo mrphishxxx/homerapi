@@ -186,6 +186,8 @@ function __get_user_from_token($token){
   $login = Login::where('token', $token)->first();
   if ($login == NULL)
     return NULL;
+  $login->updated_at = date('Y-m-d');
+  $login->save();
   return $login->user;
 }
 

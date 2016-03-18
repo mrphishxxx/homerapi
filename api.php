@@ -449,7 +449,7 @@ function api_get_own_post_detail(){
 				// global $capsule;
 				// $totalMatchings = $capsule->connection()->select($sql, [$lat, $lng, $post_id, $lat, $lng]);
                 
-                $totalMatchings = MatchingPost::where('post_from', $post->id)->where('state', '<>', 2)->orderBy('dist');
+                $totalMatchings = MatchingPost::where('post_from', $post->id)->where('state', '<>', 2)->orderBy('dist')->get();
 
 				
 				$seenPosts = $user->viewedPosts;

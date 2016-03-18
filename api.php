@@ -702,7 +702,7 @@ function api_delete_post(){
 }
 
 /**
- * @api {post} /post/delete_match Delete Post
+ * @api {post} /post/delete-from-match Delete Post From Match List 
  * @apiVersion 1.0.0
  * @apiName DeletePostFromMatchList
  * @apiGroup Post
@@ -792,6 +792,8 @@ function api_edit_post(){
 	}
 	echo json_encode($result);
 }
+
+
 
 /**
  * @api {post} /user/get-mine Get My Profile
@@ -1012,7 +1014,7 @@ function api_rate_user(){
 }
 
 /**
- * @api {post} /user/rate/reply Reply to rating
+ * @api {post} /user/rating/reply Reply to rating
  * @apiVersion 1.0.0
  * @apiName ReplyRating
  * @apiGroup User
@@ -1075,6 +1077,8 @@ function api_reply_rating(){
 
 	echo json_encode($result);
 }
+
+
 
 /**
  * @api {post} /user/upload-avatar Upload User Avatar

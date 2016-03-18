@@ -456,6 +456,49 @@
   },
   {
     "type": "post",
+    "url": "/post/delete-from-match",
+    "title": "Delete Post From Match List",
+    "version": "1.0.0",
+    "name": "DeletePostFromMatchList",
+    "group": "Post",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Users unique access-key.</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "main_post_id",
+            "description": "<p>Post ID</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "delete_post_id",
+            "description": "<p>Post ID</p>"
+          }
+        ]
+      }
+    },
+    "filename": "./api.php",
+    "groupTitle": "Post"
+  },
+  {
+    "type": "post",
     "url": "/post/edit",
     "title": "Edit Post",
     "version": "1.0.0",
@@ -708,7 +751,43 @@
             "type": "Number",
             "optional": false,
             "field": "agent_id",
-            "description": "<p>Post ID</p>"
+            "description": "<p>User ID</p>"
+          }
+        ]
+      }
+    },
+    "filename": "./api.php",
+    "groupTitle": "User"
+  },
+  {
+    "type": "post",
+    "url": "/user/ratings",
+    "title": "Get User Ratings",
+    "version": "1.0.0",
+    "name": "GetUserRatings",
+    "group": "User",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Users unique access-key.</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "agent_id",
+            "description": "<p>User ID</p>"
           }
         ]
       }
@@ -745,6 +824,86 @@
             "optional": false,
             "field": "score",
             "description": "<p>Score</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "agent_id",
+            "description": "<p>Agent id</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "comment",
+            "description": "<p>Comment</p>"
+          }
+        ]
+      }
+    },
+    "filename": "./api.php",
+    "groupTitle": "User"
+  },
+  {
+    "type": "post",
+    "url": "/user/rating/reply",
+    "title": "Reply to rating",
+    "version": "1.0.0",
+    "name": "ReplyRating",
+    "group": "User",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Users unique access-key.</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "rating_id",
+            "description": "<p>Rating id</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "reply",
+            "description": "<p>reply</p>"
+          }
+        ]
+      }
+    },
+    "filename": "./api.php",
+    "groupTitle": "User"
+  },
+  {
+    "type": "post",
+    "url": "/user/request-email-verification",
+    "title": "Request Email verification",
+    "version": "1.0.0",
+    "name": "Request_Email_verification",
+    "group": "User",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Users unique access-key.</p>"
           }
         ]
       }

@@ -23,6 +23,8 @@ switch ($path){
 	case '/auth/reset-password':
 		api_reset_password($email, $code, $newpass);
 		break;
+
+
 	case '/post/add': // add
 		api_add_post();
 		break;
@@ -44,6 +46,11 @@ switch ($path){
 	case '/post/edit':
 		api_edit_post();
 		break;
+    case '/post/delete-from-match':
+        api_delete_post_from_match();
+        break;
+
+
 	case '/user/get-mine':
 		api_get_my_profile();
 		break;
@@ -74,7 +81,15 @@ switch ($path){
 	case '/user/images':
 		api_user_images();
 		break;
-	case '/test':
+	case '/user/ratings':
+        api_get_user_ratings();
+        break;
+    case '/user/rating/reply':
+        api_reply_rating();
+    
+    
+    
+    case '/test':
 		api_test();
 		break;
 	default:

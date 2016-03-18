@@ -339,5 +339,37 @@ function distance($lat1, $lon1, $lat2, $lon2, $unit) {
       }
 }
 
+public function sendGCMMessage($registration_ids, $content)
+{
+
+	$fields = array(
+		'registration_ids' =>  $registration_ids,
+		'data'			   => 	$content
+		);
+
+	$headers = array(
+		'Authorization: key=' . DROID_API_KEY,
+		'Content-Type: application/json'
+	);
+
+	$ch = curl_init();
+	curl_setopt( $ch,CURLOPT_URL, 'https://android.googleapis.com/gcm/send' );
+	curl_setopt( $ch,CURLOPT_POST, true );
+	curl_setopt( $ch,CURLOPT_HTTPHEADER, $headers );
+	curl_setopt( $ch,CURLOPT_RETURNTRANSFER, true );
+	curl_setopt( $ch,CURLOPT_SSL_VERIFYPEER, false );
+	curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode( $fields ) );
+	$result = curl_exec($ch );
+	
+//	print_r($registration_ids);
+//	print_r($fields);
+//	echo $result;
+	if(curl_errno($ch))
+	{
+		 // echo 'GCM error:'.curl_error($ch);
+	}
+	curl_close( $ch );
+
+}
 
 ?>

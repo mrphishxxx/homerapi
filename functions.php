@@ -273,8 +273,11 @@ function __process_post($post){
   if (count($devices) == 0){
     return;
   }
-  $message = $post->user->full_name . ' has just posted that matches your post';
-  sendGcmMessage($message, $devices);
+  $message = array(
+    'message' => $post->user->full_name . ' has just posted that matches your post',
+    'post_id' => $post->id
+    );
+  sendGCMMessage($devices, $message);
 }
 
 function __view_match_post($user_id, $mpost_id){

@@ -449,7 +449,7 @@ function api_get_own_post_detail(){
 				// global $capsule;
 				// $totalMatchings = $capsule->connection()->select($sql, [$lat, $lng, $post_id, $lat, $lng]);
                 
-                $totalMatchings = MatchingPost::where('post_from', $post->id)->where('state', '<>', 2)->orderBy('dist')->get();
+                $totalMatchings = MatchingPost::where('post_from', $post_id)->where('state', '<>', 2)->orderBy('dist')->get();
 
 				
 				$seenPosts = $user->viewedPosts;
@@ -462,7 +462,11 @@ function api_get_own_post_detail(){
 				$sarray = array();
 				$numNewMatch = 0;
 				foreach ($totalMatchings as $t){
-					$p = Post::find($t->post_to);
+					$p = $t->postTo;
+					if ($p == NULL){
+						$t->delete();
+						continue;
+					}
 					$m = array(
 						'post_id' => $p->id,
 						'image_avatar' => $p->user->avatar,
@@ -485,7 +489,7 @@ function api_get_own_post_detail(){
 						'created_at' => $p->created_at,
 						'update_date' => $p->update_time
 						);
-					if ($m->is_new){
+					if ($m['is_new']){
 						$numNewMatch++;
 					}
 					if ($t->dist > 5){
@@ -589,6 +593,10 @@ function api_get_post_detail(){
 						continue;
 					}
 					$post = Post::find($p->id);
+					if ($post == NULL){
+						$p->delete();
+						continue;
+					}
 					$m = array(
 						'post_id' => $post->id,
 						'image_avatar' => $post->user->avatar,
@@ -618,6 +626,10 @@ function api_get_post_detail(){
 						continue;
 					}
 					$post = Post::find($p->id);
+					if ($post == NULL){
+						$p->delete();
+						continue;
+					}
 					$s = array(
 						'post_id' => $post->id,
 						'image_avatar' => $post->user->avatar,
@@ -690,6 +702,11 @@ function api_delete_post(){
 					'message' => 'No such post',
 					);
 			} else{
+				MatchingPost::where('post_from', $post_id)->delete();
+				MatchingPost::where('post_to', $post_id)->delete();
+
+				SimilarPost::where('post_from', $post_id)->delete();
+				SimilarPost::where('post_to', $post_id)->delete();
 				$post->delete();
 				$result = array(
 					'success' => 'true',
@@ -1004,7 +1021,11 @@ function api_rate_user(){
 							);
                         if (count($devices) > 0){
                             $message = $user->full_name . ' has just rated your post';
-                            sendGcmMessage($message, $devices);
+                            // sendGcmMessage($message, $devices);
+                            sendGCMMessage($devices, array(
+                            	'message' => $message,
+                            	'agent_id' => $agent_id
+                            	));
                         }
 					}
 				}

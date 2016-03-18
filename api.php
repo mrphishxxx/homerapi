@@ -923,7 +923,8 @@ function api_get_user_ratings(){
 					'message' => 'Successfully fetched user profile',
 					'data' => array(
 						'score' => $user->ratings()->avg('score'),
-                        'num_review' => $user->ratings()->count()
+                        'num_review' => $user->ratings()->count(),
+                        'ratings' => array()
 						)
 					);
                 
@@ -944,6 +945,7 @@ function api_get_user_ratings(){
                         $r['reply_text'] = 'No reply';
                         $r['reply_date'] = '';
                     }
+                    $result['ratings'][] = $r;
                 }
 			}
 		}

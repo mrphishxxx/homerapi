@@ -566,7 +566,7 @@ function api_get_post_detail(){
 
 				// $matchings = $capsule->connection()->select($sql, [$lat, $lng, $post_id, $lat, $lng, $lat, $lng]);
                 
-                $matchings = MatchingPost::where('post_from', $post->id)->where('state', '<>', 2)->orderBy('dist');
+                $matchings = MatchingPost::where('post_from', $post->id)->where('state', '<>', 2)->orderBy('dist')->get();
 
 				// $sql = "select posts.*, CoordinateDistanceKM(lat, lng, ?, ?) as dist from `posts` 
 				// 		inner join `similarposts` 
@@ -579,7 +579,7 @@ function api_get_post_detail(){
 
 				// $similars = $capsule->connection()->select($sql, [$lat, $lng, $post_id, $lat, $lng, $lat, $lng]);
                 
-                $similars = SimilarPost::where('post_from', $post->id)->orderBy('dist');
+                $similars = SimilarPost::where('post_from', $post->id)->orderBy('dist')->get();
 
 
 				$marray = array();
@@ -732,7 +732,7 @@ function api_delete_post_from_match(){
 					'message' => 'No such post',
 					);
 			} else{
-				$mp->deleted = 1;
+				$mp->state = 2;
                 $mp->save();
 				$result = array(
 					'success' => 'true',

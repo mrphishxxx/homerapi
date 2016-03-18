@@ -207,7 +207,7 @@ function __process_post($post){
                   ->get();
 
   foreach ($similars as $s){
-    $dist = distance($post->lat, $post->lng, $s->lat, $s->lng); 
+    $dist = distance($post->lat, $post->lng, $s->lat, $s->lng, 'K'); 
     $post->similarTo()->attach($s->id, ['dist' => $dist, 'state' => 0]);
     if ($post->num_rooms == $s->num_rooms){
       $s->similarTo()->detach($post->id);
@@ -227,7 +227,7 @@ function __process_post($post){
   
   $devices = array();
   foreach ($matchings as $m){
-    $dist = distance($post->lat, $post->lng, $m->lat, $m->lng); 
+    $dist = distance($post->lat, $post->lng, $m->lat, $m->lng, 'K'); 
     $match = MatchingPost::where('post_from', $post->id)->where('post_to', $m->id)->first();
      
     if (match == NULL){

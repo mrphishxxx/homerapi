@@ -230,7 +230,7 @@ function __process_post($post){
     $dist = distance($post->lat, $post->lng, $m->lat, $m->lng, 'K'); 
     $match = MatchingPost::where('post_from', $post->id)->where('post_to', $m->id)->first();
      
-    if (match == NULL){
+    if ($match == NULL){
         $match = new MatchingPost;
         $match->post_from = $post->id;
         $match->post_to = $m->id;

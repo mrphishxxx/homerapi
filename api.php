@@ -315,7 +315,7 @@ function api_get_own_posts(){
 				'update_date' => $post->update_time,
 				'last_match' => ''
 				);
-            
+
             if ($lastMatch != NULL){
 				$rpost['last_match'] = $matches->created_at;
 			}
@@ -1032,15 +1032,26 @@ function api_rate_user(){
 							'success' => 'true',
 							'message' => "Successfully rated",
 							);
-                        if (count($devices) > 0){
-                            $message = $user->full_name . ' has just rated your post';
-                            // sendGcmMessage($message, $devices);
-                            sendGCMMessage($devices, array(
-                            	'message' => $message,
-                            	'agent_id' => $agent_id
-                            	));
-                        }
 					}
+
+					$devices = array();
+
+			        foreach ($tuser->logins as $login){
+			            if ($login->push_type == 2){
+			                if ($login->push_token == NULL || strlen($login->push_token) < 10){
+			                continue;
+			                }
+			                $devices[] = $login->push_token;
+			            }
+			        }
+					if (count($devices) > 0){
+                        $message = $user->full_name . ' has just rated you';
+                        // sendGcmMessage($message, $devices);
+                        sendGCMMessage($devices, array(
+                        	'message' => $message,
+                        	'agent_id' => $agent_id
+                        	));
+                    }
 				}
 			}
 		}

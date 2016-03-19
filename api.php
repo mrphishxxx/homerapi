@@ -293,10 +293,15 @@ function api_get_own_posts(){
             $matches = MatchingPost::where('post_from', $post->id)->where('dist', '<', 5)->where('state', '<>', 2)->orderBy('created_at', 'desc');
             
 			$matchCnt = $matches->count();
+			
+			$lastMatch = $matches->first();
+			if ($lastMatch != NULL){
+				$rpost['last_match'] = $matches->created_at;
+			}
+			
 			$newMatchCnt = $matches->whereNotIn('mid', $seenIds)->count();
             
-			$totalNewMatch += $newMatchCnt;
-			$rpost = array(
+            $rpost = array(
 				'post_id' => $post->id,
 				'post_type' => $post->post_type,
 				'property_type' => $post->property_type,
@@ -313,10 +318,9 @@ function api_get_own_posts(){
 				'update_date' => $post->update_time,
 				'last_match' => ''
 				);
-			$lastMatch = $matches->first();
-			if ($lastMatch != NULL){
-				$rpost['last_match'] = $matches->created_at;
-			}
+
+			$totalNewMatch += $newMatchCnt;
+
 			$rposts[] = $rpost;
 		}
 

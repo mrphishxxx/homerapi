@@ -295,9 +295,6 @@ function api_get_own_posts(){
 			$matchCnt = $matches->count();
 			
 			$lastMatch = $matches->first();
-			if ($lastMatch != NULL){
-				$rpost['last_match'] = $matches->created_at;
-			}
 			
 			$newMatchCnt = $matches->whereNotIn('mid', $seenIds)->count();
             
@@ -318,6 +315,10 @@ function api_get_own_posts(){
 				'update_date' => $post->update_time,
 				'last_match' => ''
 				);
+            
+            if ($lastMatch != NULL){
+				$rpost['last_match'] = $matches->created_at;
+			}
 
 			$totalNewMatch += $newMatchCnt;
 
@@ -1022,8 +1023,8 @@ function api_rate_user(){
 						$rt->delete();
 						__rate_user($user->id, $tuser->id, $score, $comment);
 						$result = array(
-							'success' => 'false',
-							'message' => "You've already rated this user"
+							'success' => 'true',
+							'message' => "Your rating has been replaced."
 						);
 					} else{
 						__rate_user($user->id, $tuser->id, $score, $comment);

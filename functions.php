@@ -269,6 +269,8 @@ function __process_post($post){
     
     if ($match->state == 0 && $dist < 5){ // send notification to post owners within 5 km (distance between post and post)
         $user = $m->user;
+        unset($devices);
+        $devices = array();
         foreach ($user->logins as $login){
             if ($login->push_type == 2){
                 if ($login->push_token == NULL || strlen($login->push_token) < 10){
@@ -279,16 +281,18 @@ function __process_post($post){
         }
         $match->state = 1;
         $match->save();
+
+        if (count($devices) == 0){
+          break;
+        }
+        $message = array(
+          'message' => $post->user->full_name . ' has just posted that matches your post',
+          'post_id' => $match->post_to,
+          'post_from' => $match->post_from,
+          );
+        sendGCMMessage($devices, $message);
     }
   }
-  if (count($devices) == 0){
-    return;
-  }
-  $message = array(
-    'message' => $post->user->full_name . ' has just posted that matches your post',
-    'post_id' => $post->id
-    );
-  sendGCMMessage($devices, $message);
 }
 
 function __view_match_post($user_id, $mpost_id){

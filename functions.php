@@ -245,6 +245,7 @@ function __process_post($post){
         $nmatch->state = $match->state;
         $nmatch->save();
         $match->delete();
+        $match = $nmatch;
     }
     
     if ($post->num_rooms == $m->num_rooms){

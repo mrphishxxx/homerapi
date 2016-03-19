@@ -290,7 +290,7 @@ function api_get_own_posts(){
 			}
 			//$matches = $post->matchedPosts()->whereRaw('CoordinateDistanceKM(lat, lng, ' . $post->lat . ', ' . $post->lng . ') < 5');
             
-            $matches = MatchingPost::where('post_from', $post->id)->where('dist', '<', 5)->where('state', '<>', 2);
+            $matches = MatchingPost::where('post_from', $post->id)->where('dist', '<', 5)->where('state', '<>', 2)->orderBy('created_at', 'desc');
             
 			$matchCnt = $matches->count();
 			$newMatchCnt = $matches->whereNotIn('mid', $seenIds)->count();
@@ -310,8 +310,13 @@ function api_get_own_posts(){
 				'post_date' => $post->post_time,
 				'num_new_match' => $newMatchCnt,
 				'num_match' => $matchCnt,
-				'update_date' => $post->update_time
+				'update_date' => $post->update_time,
+				'last_match' => ''
 				);
+			$lastMatch = $matches->first();
+			if ($lastMatch != NULL){
+				$rpost['last_match'] = $matches->created_at;
+			}
 			$rposts[] = $rpost;
 		}
 
@@ -343,7 +348,7 @@ function api_get_all_posts(){
 			'message' => 'Invalid token',
 			);
 	} else{
-		$posts = Post::orderBy('id', 'desc')->get();
+		$posts = Post::orderBy('updated_at', 'desc')->get();
 		$seenPosts = $user->viewedPosts;
 		$seenIds = array();
 		foreach ($seenPosts as $p){
@@ -1008,7 +1013,10 @@ function api_rate_user(){
 						'message' => 'No such user',
 						);
 				} else{
-					if ($tuser->ratings()->where('user_from', $user->id)->count() > 0){
+					$rt = $tuser->ratings()->where('user_from', $user->id)->first();
+					if ($rt != NULL){
+						$rt->delete();
+						__rate_user($user->id, $tuser->id, $score, $comment);
 						$result = array(
 							'success' => 'false',
 							'message' => "You've already rated this user"
@@ -1077,9 +1085,9 @@ function api_reply_rating(){
                     $rating->save();
                     
                     foreach ($rating->userFrom->logins as $login){          // send notification to the user who rated this.
-                    if ($login->push_type == 2){
-                        if ($login->push_token == NULL || strlen($login->push_token) < 10){
-                        continue;
+	                    if ($login->push_type == 2){
+	                        if ($login->push_token == NULL || strlen($login->push_token) < 10){
+	                        	continue;
                         }
                         $devices[] = $login->push_token;
                         
@@ -1090,9 +1098,9 @@ function api_reply_rating(){
                         $result = array(
                             'success' => 'true',
                             'message' => 'Successfully replied to the comment'
-                        );
-                    }
-                }
+                        	);
+                    	}
+                	}
                 }
             }
 		}

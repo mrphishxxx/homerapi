@@ -238,7 +238,13 @@ function __process_post($post){
         $match->state = 0;
         $match->save();
     } else{ 
-        $match->dist = $dist;
+        $nmatch = new MatchingPost();
+        $nmatch->post_from = $post->id;
+        $nmatch->post_to = $m->id;
+        $nmatch->dist = $dist;
+        $nmatch->state = $match->state;
+        $nmatch->save();
+        $match->delete();
     }
     
     if ($post->num_rooms == $m->num_rooms){
@@ -251,8 +257,13 @@ function __process_post($post){
         $amatch->state = 0;
         $amatch->save();
       } else{
-        $amatch->dist = $dist;
-        $amatch->save();
+        $anmatch = new MatchingPost;
+        $anmatch->post_from = $m->id;
+        $anmatch->post_to = $post->id;
+        $anmatch->dist = $dist;
+        $anmatch->state = $amatch->state;
+        $anmatch->save();
+        $amatch->delete();
       }
     }
     

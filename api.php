@@ -317,7 +317,7 @@ function api_get_own_posts(){
 				);
 
             if ($lastMatch != NULL){
-				$rpost['last_match'] = $lastMatch->created_at;
+				$rpost['last_match'] = date_format(DateTime::createFromFormat('Y-m-d H:i:s', $lastMatch->created_at), 'm-d-Y');
 			}
 
 			$totalNewMatch += $newMatchCnt;

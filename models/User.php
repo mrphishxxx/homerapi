@@ -17,8 +17,8 @@ class User extends Eloquent{
 		return $this->hasMany('Login', 'user_id');
 	}
 
-	public function viewedPosts(){
-		return $this->belongsToMany('Post', 'postviews', 'user_id', 'post_id');
+	public function viewedMatches(){
+		return $this->belongsToMany('MatchingPost', 'postviews', 'user_id', 'post_id');
 	}
 
 	public function ratings(){

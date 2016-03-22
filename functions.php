@@ -298,8 +298,8 @@ function __process_post($post){
 
 function __view_match_post($user_id, $mpost_id){
   $user = User::find($user_id);
-  $user->viewedPosts()->detach($mpost_id);
-  $user->viewedPosts()->attach($mpost_id);
+  $user->viewedMatches()->detach($mpost_id);
+  $user->viewedMatches()->attach($mpost_id);
 }
 
 function __reserve_verification($user_id, $verification_type){

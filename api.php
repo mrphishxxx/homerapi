@@ -275,11 +275,11 @@ function api_get_own_posts(){
 			);
 	} else{
 		$posts = $user->posts()->orderBy('id', 'desc')->get();
-		$seenPosts = $user->viewedPosts;
+		$seenPosts = $user->viewedMatches;
 		$seenIds = array();
 		$totalNewMatch = 0;
-		foreach ($seenPosts as $p){
-			$seenIds[] = $p->id;
+		foreach ($seenPosts as $m){
+			$seenIds[] = $m->mid;
 		}
 
 		$rposts = array();
@@ -296,7 +296,7 @@ function api_get_own_posts(){
 			
 			$lastMatch = $matches->first();
 			
-			$newMatchCnt = $matches->whereNotIn('post_to', $seenIds)->count();
+			$newMatchCnt = $matches->whereNotIn('mid', $seenIds)->count();
             
             $rpost = array(
 				'post_id' => $post->id,
@@ -354,10 +354,10 @@ function api_get_all_posts(){
 			);
 	} else{
 		$posts = Post::orderBy('updated_at', 'desc')->get();
-		$seenPosts = $user->viewedPosts;
+		$seenPosts = $user->viewedMatches;
 		$seenIds = array();
-		foreach ($seenPosts as $p){
-			$seenIds[] = $p->id;
+		foreach ($seenPosts as $m){
+			$seenIds[] = $m->mid;
 		}
 
 		$totalMatch = 0;
@@ -391,7 +391,7 @@ function api_get_all_posts(){
 				'agent_name' => $post->user->full_name,
 				'agent_avatar' => $post->user->avatar,
 				'quickblox_id' => $post->user->quickblox_id,
-				'num_new_match' => $matches->whereNotIn('post_to', $seenIds)->count(),
+				'num_new_match' => $matches->whereNotIn('mid', $seenIds)->count(),
 				'num_match' => $matchCnt,
 				'created_at' => $post->created_at,
 				'update_date' => $post->update_time
@@ -462,10 +462,10 @@ function api_get_own_post_detail(){
                 $totalMatchings = MatchingPost::where('post_from', $post_id)->where('state', '<>', 2)->orderBy('updated_at', 'desc')->get();
 
 				
-				$seenPosts = $user->viewedPosts;
+				$seenPosts = $user->viewedMatches;
 				$seenIds = array();
-				foreach ($seenPosts as $p){
-					$seenIds[] = $p->id;
+				foreach ($seenPosts as $m){
+					$seenIds[] = $m->mid;
 				}
 
 				$marray = array();
@@ -494,10 +494,11 @@ function api_get_own_post_detail(){
 						'price' => $p->price,
 						'description' => $p->description,
 						'post_date' => $p->post_time,
-						'is_new' => (! in_array($t->postTo, $seenIds)) && ($t->dist < 5),
+						'is_new' => (! in_array($t->mid, $seenIds)) && ($t->dist < 5),
 						'distance' => $t->dist,
 						'created_at' => $p->created_at,
-						'update_date' => $p->update_time
+						'update_date' => $p->update_time,
+						'seen' => in_array($t->mid, $seenIds),
 						);
 					if ($m['is_new']){
 						$numNewMatch++;
@@ -507,7 +508,7 @@ function api_get_own_post_detail(){
 					} else{
 						$marray[] = $m;
 					}
-					__view_match_post($user->id, $t->postTo);
+					__view_match_post($user->id, $t->mid);
 				}
 
 				// __view_match_post($user->id, $post->id);

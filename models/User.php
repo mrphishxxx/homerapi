@@ -18,7 +18,7 @@ class User extends Eloquent{
 	}
 
 	public function viewedPosts(){
-		return $this->belongsToMany('MatchingPost', 'postviews', 'user_id', 'post_id');
+		return $this->belongsToMany('Post', 'postviews', 'user_id', 'post_id');
 	}
 
 	public function ratings(){

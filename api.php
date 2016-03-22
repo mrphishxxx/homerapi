@@ -279,7 +279,7 @@ function api_get_own_posts(){
 		$seenIds = array();
 		$totalNewMatch = 0;
 		foreach ($seenPosts as $p){
-			$seenIds[] = $p->mid;
+			$seenIds[] = $p->id;
 		}
 
 		$rposts = array();
@@ -357,7 +357,7 @@ function api_get_all_posts(){
 		$seenPosts = $user->viewedPosts;
 		$seenIds = array();
 		foreach ($seenPosts as $p){
-			$seenIds[] = $p->mid;
+			$seenIds[] = $p->id;
 		}
 
 		$totalMatch = 0;
@@ -465,7 +465,7 @@ function api_get_own_post_detail(){
 				$seenPosts = $user->viewedPosts;
 				$seenIds = array();
 				foreach ($seenPosts as $p){
-					$seenIds[] = $p->mid;
+					$seenIds[] = $p->id;
 				}
 
 				$marray = array();

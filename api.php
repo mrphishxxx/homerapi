@@ -507,7 +507,7 @@ function api_get_own_post_detail(){
 					} else{
 						$marray[] = $m;
 					}
-					__view_match_post($user->id, $t->mid);
+					__view_match_post($user->id, $t->postTo);
 				}
 
 				// __view_match_post($user->id, $post->id);

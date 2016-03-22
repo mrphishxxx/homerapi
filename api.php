@@ -317,7 +317,7 @@ function api_get_own_posts(){
 				);
 
             if ($lastMatch != NULL){
-				$rpost['last_match'] = date_format(DateTime::createFromFormat('Y-m-d H:i:s', $lastMatch->created_at), 'm-d-Y');
+				$rpost['last_match'] = date_format(DateTime::createFromFormat('Y-m-d H:i:s', $lastMatch->created_at), 'm-d-Y H:i:s');
 			}
 
 			$totalNewMatch += $newMatchCnt;
@@ -337,7 +337,7 @@ function api_get_own_posts(){
 }
 
 /**
- * @api {post} /post/get-all Get Own Post
+ * @api {post} /post/get-all Get All Post
  * @apiVersion 1.0.0
  * @apiName GetAllPosts
  * @apiGroup Post
@@ -580,7 +580,7 @@ function api_get_post_detail(){
 
 				// $matchings = $capsule->connection()->select($sql, [$lat, $lng, $post_id, $lat, $lng, $lat, $lng]);
                 
-                $matchings = MatchingPost::where('post_from', $post->id)->where('state', '<>', 2)->orderBy('dist')->get();
+                $matchings = MatchingPost::where('post_from', $post_id)->where('state', '<>', 2)->orderBy('dist')->get();
 
 				// $sql = "select posts.*, CoordinateDistanceKM(lat, lng, ?, ?) as dist from `posts` 
 				// 		inner join `similarposts` 
@@ -593,7 +593,7 @@ function api_get_post_detail(){
 
 				// $similars = $capsule->connection()->select($sql, [$lat, $lng, $post_id, $lat, $lng, $lat, $lng]);
                 
-                $similars = SimilarPost::where('post_from', $post->id)->orderBy('dist')->get();
+                $similars = SimilarPost::where('post_from', $post_id)->orderBy('dist')->get();
 
 
 				$marray = array();
@@ -905,7 +905,7 @@ function api_get_user_profile(){
                    if ($login == NULL){
                        $result['data']['last_access'] = '';
                    } else{
-                       $result['data']['last_access'] = date("jS F, Y", strtotime($login->updated_at));
+                       $result['data']['last_access'] = date("m-d-Y H:i:s", strtotime($login->updated_at));
                    }
 			}
 		}
@@ -961,13 +961,13 @@ function api_get_user_ratings(){
                         'id' => $rating->id,
                         'avatar' => $rating->userFrom->avatar,
                         'name' => $rating->userFrom->full_name,
-                        'date' => date("jS F, Y", strtotime($rating->created_at)),
+                        'date' => date("m/d/Y", strtotime($rating->created_at)),
                         'score' => $rating->score,
                         'review_text' => $rating->comment,
                     );
                     if ($rating->reply != NULL){
                         $r['reply_text'] = $rating->reply;
-                        $r['reply_date'] = date("jS F, Y", strtotime($rating->updated_at));
+                        $r['reply_date'] = date("m/d/Y", strtotime($rating->updated_at));
                     } else{
                         $r['reply_text'] = 'No reply';
                         $r['reply_date'] = '';
@@ -1104,19 +1104,23 @@ function api_reply_rating(){
 	                    if ($login->push_type == 2){
 	                        if ($login->push_token == NULL || strlen($login->push_token) < 10){
 	                        	continue;
-                        }
-                        $devices[] = $login->push_token;
-                        
-                        if (count($devices) > 0){
-                            $message = $user->full_name . ' has just replied to your rating';
-                            sendGcmMessage($message, $devices);
-                        }                        
-                        $result = array(
-                            'success' => 'true',
-                            'message' => 'Successfully replied to the comment'
-                        	);
-                    	}
+                        	}
+                        	$devices[] = $login->push_token;
+                		}
                 	}
+
+                	if (count($devices) > 0){
+                    	$message = $user->full_name . ' has just replied to your rating';
+                    	// sendGcmMessage($message, $devices);
+                    	sendGCMMessage($devices, array(
+                        	'message' => $message
+                        	));
+                	}
+
+                	$result = array(
+                        'success' => 'true',
+                        'message' => 'Successfully replied to the comment'
+                    	);
                 }
             }
 		}

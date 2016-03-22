@@ -563,9 +563,9 @@ function api_get_post_detail(){
 			} else{
             //$matchings = $post->matchingPosts()->whereRaw($dist)->orderByRaw($dist, 'asc')->limit(100)->get();// + $post->matchedPosts;
             //$similars = $post->similarFrom()->whereRaw($dist)->orderByRaw($dist, 'asc')->limit(100)->get();// + $post->similarTo;
-				if ($post->lat == NULL){
-					$post->lat = 999;
-					$post->lng = 999; 
+				if ($ppost->lat == NULL){
+					$ppost->lat = 999;
+					$ppost->lng = 999; 
 				}
 				$lat = $ppost->lat;
 				$lng = $ppost->lng;
@@ -603,7 +603,7 @@ function api_get_post_detail(){
 					if ($p->dist > 5){
 						continue;
 					}
-					$post = Post::find($p->id);
+					$post = Post::find($p->post_to);
 					if ($post == NULL){
 						$p->delete();
 						continue;
@@ -1114,7 +1114,8 @@ function api_reply_rating(){
                     	$message = $user->full_name . ' has just replied to your rating';
                     	// sendGcmMessage($message, $devices);
                     	sendGCMMessage($devices, array(
-                        	'message' => $message
+                        	'message' => $message,
+                        	'replier_id' => $user->id
                         	));
                 	}
 

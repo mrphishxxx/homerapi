@@ -494,7 +494,7 @@ function api_get_own_post_detail(){
 						'price' => $p->price,
 						'description' => $p->description,
 						'post_date' => $p->post_time,
-						'is_new' => in_array($t->mid, $seenIds) && ($t->dist < 5),
+						'is_new' => in_array($t->postTo, $seenIds) && ($t->dist < 5),
 						'distance' => $t->dist,
 						'created_at' => $p->created_at,
 						'update_date' => $p->update_time

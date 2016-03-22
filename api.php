@@ -906,7 +906,7 @@ function api_get_user_profile(){
                    if ($login == NULL){
                        $result['data']['last_access'] = '';
                    } else{
-                       $result['data']['last_access'] = date("m-d-Y H:i:s", strtotime($login->updated_at));
+                       $result['data']['last_access'] = date("m-d-Y", strtotime($login->updated_at));
                    }
 			}
 		}

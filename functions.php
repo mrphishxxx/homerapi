@@ -145,7 +145,7 @@ function __edit_post($uid, $post_id, $post_type, $property_type, $location, $num
   $post = Post::find($post_id);
   $user = User::find($uid);
 
-  $user->viewedPosts()->detach($post->id);
+  $user->viewedMatches()->detach($post->id);
 
   if ($post->post_type != $post_type){
     SimilarPost::where('post_from', $post->id)->delete();       // if post type had been changed, similar / matching relationship would have been broken.

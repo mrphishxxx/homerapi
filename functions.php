@@ -218,7 +218,7 @@ function __process_post($post){
     $sp->save();
     
     if ($post->num_rooms == $s->num_rooms){
-      Similar::where('post_from', $post->id)->where('post_to', $s->id)->delete();
+      SimilarPost::where('post_from', $post->id)->where('post_to', $s->id)->delete();
       
       $ssp = new SimilarPost;
       $ssp->post_from = $post->id;

@@ -208,10 +208,24 @@ function __process_post($post){
 
   foreach ($similars as $s){
     $dist = distance($post->lat, $post->lng, $s->lat, $s->lng, 'K'); 
-    $post->similarTo()->attach($s->id, ['dist' => $dist, 'state' => 0]);
+    
+    $sp = new SimilarPost;
+    $sp->post_from = $post->id;
+    $sp->post_to = $s->id;
+    $sp->dist = $dist;
+    $sp->state = 0;
+    $sp->save();
+    
     if ($post->num_rooms == $s->num_rooms){
-      $s->similarTo()->detach($post->id);
-      $s->similarTo()->attach($post->id, ['dist' => $dist, 'state' => 0]);
+      Similar::where('post_from', $post->id)->where('post_to', $s->id)->delete();
+      
+      $ssp = new SimilarPost;
+      $ssp->post_from = $post->id;
+      $ssp->post_to = $s->id;
+      $ssp->dist = $dist;
+      $ssp->state = 0;
+      $ssp->save();
+      
     }
   }
 

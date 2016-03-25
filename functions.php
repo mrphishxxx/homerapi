@@ -221,8 +221,8 @@ function __process_post($post){
       SimilarPost::where('post_to', $post->id)->where('post_from', $s->id)->delete();
       
       $ssp = new SimilarPost;
-      $ssp->post_from = $post->id;
-      $ssp->post_to = $s->id;
+      $ssp->post_to = $post->id;
+      $ssp->post_from = $s->id;
       $ssp->dist = $dist;
       $ssp->state = 0;
       $ssp->save();

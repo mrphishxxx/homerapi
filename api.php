@@ -636,7 +636,7 @@ function api_get_post_detail(){
 					if ($p->dist > 5){
 						continue;
 					}
-					$post = Post::find($p->id);
+					$post = Post::find($p->sid);
 					if ($post == NULL){
 						$p->delete();
 						continue;

@@ -204,6 +204,7 @@ function __process_post($post){
                   ->where('num_rooms', '>=', $post->num_rooms)
                   ->where('post_type', $post->post_type)
                   ->where('id', '<>', $post->id)
+                  ->where('user_id', '<>', $post->user_id)   // i won't regard mine as matching post
                   ->get();
 
   foreach ($similars as $s){

@@ -1,7 +1,8 @@
 {
     "require": {
-        "illuminate/database": "^5.1",
-        "sly/notification-pusher" : "2.2.12"
+		"illuminate/database": "^5.1",
+        "bcosca/fatfree": "*",
+		"sly/notification-pusher" : "2.2.12"
     },
     "autoload": {
     	"classmap": [

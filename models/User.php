@@ -7,7 +7,7 @@ class User extends Eloquent{
 
 	use SoftDeletes;
 
-	protected $visible = ['id', 'full_name', 'avatar', 'quickblox_id'];
+	// protected $visible = ['id', 'full_name', 'avatar', 'quickblox_id', 'creci', 'email_verified', ];
 
 	public function posts(){
 		return $this->hasMany('Post', 'user_id');

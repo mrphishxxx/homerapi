@@ -122,8 +122,7 @@ class Curl implements HttpAdapter, StreamInterface
         }
 
         if (isset($options['sslverifypeer'])) {
-            // $this->setCurlOption(CURLOPT_SSL_VERIFYPEER, $options['sslverifypeer']);
-            $this->setCurlOption(CURLOPT_SSL_VERIFYPEER, false);
+            $this->setCurlOption(CURLOPT_SSL_VERIFYPEER, $options['sslverifypeer']);
             unset($options['sslverifypeer']);
         }
 

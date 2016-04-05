@@ -11,6 +11,7 @@ $f3->route('POST /auth/reset-password', 'API->reset_password');
 
 
 $f3->route('POST /post/add', 'API->add_post');
+$f3->route('POST /post/edit', 'API->edit_post');
 $f3->route('POST /post/get-own', 'API->get_own_posts');
 $f3->route('POST /post/get-all', 'API->get_all_posts');
 $f3->route('POST /post/get-own-detail', 'API->get_own_post_detail');

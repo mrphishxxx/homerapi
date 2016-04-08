@@ -302,7 +302,7 @@ function __process_post($post){
           break;
         }
         $message = array(
-          'message' => $post->user->full_name . ' has just posted that matches your post',
+          'message' => $post->user->full_name . ' has just created a post that matches your post',
           'post_id' => $match->post_to,
           'post_from' => $match->post_from,
           );

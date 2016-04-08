@@ -281,13 +281,15 @@ class API{
                 }
                 //$matches = $post->matchedPosts()->whereRaw('CoordinateDistanceKM(lat, lng, ' . $post->lat . ', ' . $post->lng . ') < 5');
                 
-                $matches = MatchingPost::where('post_from', $post->id)->where('dist', '<', 5)->where('state', '<>', 2)->orderBy('created_at', 'desc');
+                $matches = MatchingPost::where('post_to', $post->id)->where('dist', '<', 5)->where('state', '<>', 2)->orderBy('created_at', 'desc');
                 
                 $matchCnt = $matches->count();
                 
                 $lastMatch = $matches->first();
                 
                 $newMatchCnt = $matches->whereNotIn('mid', $seenIds)->count();
+
+                $hiddenCnt = MatchingPost::where('post_from', $post->id)->where('state', 2)->count();
                 
                 $rpost = array(
                     'post_id' => $post->id,
@@ -304,7 +306,8 @@ class API{
                     'num_new_match' => $newMatchCnt,
                     'num_match' => $matchCnt,
                     'update_date' => $post->update_time,
-                    'last_match' => ''
+                    'last_match' => '',
+                    'hidden_cnt' => $hiddenCnt,
                     );
 
                 if ($lastMatch != NULL){
@@ -361,7 +364,7 @@ class API{
                 }
                 //$matches = $post->matchedPosts()->whereRaw('CoordinateDistanceKM(lat, lng, ' . $post->lat . ', ' . $post->lng . ') < 5');
                 
-                $matches = MatchingPost::where('post_from', $post->id)->where('dist', '<', 5)->where('state', '<>', 2);
+                $matches = MatchingPost::where('post_to', $post->id)->where('dist', '<', 5)->where('state', '<>', 2);
 
                 $matchCnt = $matches->count();
                 $totalMatch += $matchCnt;
@@ -450,7 +453,7 @@ class API{
                     // global $capsule;
                     // $totalMatchings = $capsule->connection()->select($sql, [$lat, $lng, $post_id, $lat, $lng]);
                     
-                    $totalMatchings = MatchingPost::where('post_from', $post_id)->where('state', '<>', 2)->orderBy('updated_at', 'desc')->get();
+                    $totalMatchings = MatchingPost::where('post_to', $post_id)->where('state', '<>', 2)->orderBy('updated_at', 'desc')->get();
 
                     
                     $seenPosts = $user->viewedMatches;
@@ -572,7 +575,7 @@ class API{
 
                     // $matchings = $capsule->connection()->select($sql, [$lat, $lng, $post_id, $lat, $lng, $lat, $lng]);
                     
-                    $matchings = MatchingPost::where('post_from', $post_id)->where('state', '<>', 2)->orderBy('dist')->get();
+                    $matchings = MatchingPost::where('post_to', $post_id)->where('state', '<>', 2)->orderBy('dist')->get();
 
                     // $sql = "select posts.*, CoordinateDistanceKM(lat, lng, ?, ?) as dist from `posts` 
                     //      inner join `similarposts` 
@@ -585,7 +588,7 @@ class API{
 
                     // $similars = $capsule->connection()->select($sql, [$lat, $lng, $post_id, $lat, $lng, $lat, $lng]);
                     
-                    $similars = SimilarPost::where('post_from', $post_id)->orderBy('dist')->get();
+                    $similars = SimilarPost::where('post_to', $post_id)->orderBy('dist')->get();
 
 
                     $marray = array();
@@ -704,7 +707,37 @@ class API{
                         'message' => 'No such post',
                         );
                 } else{
-                    MatchingPost::where('post_from', $post_id)->delete();
+                    // MatchingPost::where('post_from', $post_id)->delete();
+                    $devices = array();
+                    $matchings = MatchingPost::where('post_from', $post_id)->where('state', '<>', 2)->get();
+
+                    foreach ($matching as $m){
+                        $user = $m->user;
+                        unset($devices);
+                        $devices = array();
+                        foreach ($user->logins as $login){
+                            if ($login->push_type == 2){
+                                if ($login->push_token == NULL || strlen($login->push_token) < 10){
+                                continue;
+                                }
+                                $devices[] = $login->push_token;
+                            }
+                        }
+                        
+                        if (count($devices) == 0){
+                          break;
+                        }
+
+                        $message = array(
+                          'message' => $post->user->full_name . ' has just deleted a post that matches your post',
+                          'post_id' => $m->post_to,
+                          'post_from' => $m->post_from,
+                          );
+                        sendGCMMessage($devices, $message);
+
+                        $m->delete();
+                    }
+
                     MatchingPost::where('post_to', $post_id)->delete();
 
                     SimilarPost::where('post_from', $post_id)->delete();
@@ -744,7 +777,7 @@ class API{
                     'message' => 'Invalid token',
                     );
             } else{
-                $mp = MatchingPost::where('post_from', $main_post_id)->where('post_to', $delete_post_id)->first();
+                $mp = MatchingPost::where('post_to', $main_post_id)->where('post_from', $delete_post_id)->first();
                 if ($mp == NULL){
                     $result = array(
                         'success' => 'false',

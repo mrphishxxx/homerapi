@@ -37,17 +37,18 @@ $f3->route('POST /user/rating/reply', 'API->reply_rating');
 
 
 $f3->route('GET /admin/login', 'API->admin_login');
-$f3->route('GET /admin/users', 'API->admin_get_users');
-$f3->route('GET /admin/users/@id', 'API->admin_get_user');
-$f3->route('DELETE /admin/users/@id', 'API->admin_delete_user');
-$f3->route('POST /admin/users/@id', 'API->admin_update_user');
+
+$f3->route('GET /admin/users', 			'API->admin_get_users');
+$f3->route('GET /admin/users/@id', 		'API->admin_get_user');
+$f3->route('DELETE /admin/users/@id', 	'API->admin_delete_user');
+$f3->route('POST /admin/users/@id', 	'API->admin_update_user');
 
 
 
-$f3->route('GET /admin/posts', 'API->admin_get_posts');
-$f3->route('GET /admin/posts/@id', 'API->admin_get_post');
-$f3->route('DELETE /admin/posts/@id', 'API->admin_delete_posts');
-$f3->route('POST /admin/posts/@id', 'API->admin_update_posts');
+$f3->route('GET /admin/posts', 			'API->admin_get_posts');
+$f3->route('GET /admin/posts/@id', 		'API->admin_get_post');
+$f3->route('DELETE /admin/posts/@id', 	'API->admin_delete_post');
+$f3->route('POST /admin/posts/@id', 	'API->admin_update_post');
 
 
 

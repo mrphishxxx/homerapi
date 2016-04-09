@@ -281,7 +281,7 @@ class API{
                 }
                 //$matches = $post->matchedPosts()->whereRaw('CoordinateDistanceKM(lat, lng, ' . $post->lat . ', ' . $post->lng . ') < 5');
                 
-                $matches = MatchingPost::where('post_to', $post->id)->where('dist', '<', 5)->where('state', '<>', 2)->orderBy('created_at', 'desc');
+                $matches = MatchingPost::where('post_from', $post->id)->where('dist', '<', 5)->where('state', '<>', 2)->orderBy('created_at', 'desc');
                 
                 $matchCnt = $matches->count();
                 
@@ -364,7 +364,7 @@ class API{
                 }
                 //$matches = $post->matchedPosts()->whereRaw('CoordinateDistanceKM(lat, lng, ' . $post->lat . ', ' . $post->lng . ') < 5');
                 
-                $matches = MatchingPost::where('post_to', $post->id)->where('dist', '<', 5)->where('state', '<>', 2);
+                $matches = MatchingPost::where('post_from', $post->id)->where('dist', '<', 5)->where('state', '<>', 2);
 
                 $matchCnt = $matches->count();
                 $totalMatch += $matchCnt;
@@ -453,7 +453,7 @@ class API{
                     // global $capsule;
                     // $totalMatchings = $capsule->connection()->select($sql, [$lat, $lng, $post_id, $lat, $lng]);
                     
-                    $totalMatchings = MatchingPost::where('post_to', $post_id)->where('state', '<>', 2)->orderBy('updated_at', 'desc')->get();
+                    $totalMatchings = MatchingPost::where('post_from', $post_id)->where('state', '<>', 2)->orderBy('updated_at', 'desc')->get();
 
                     
                     $seenPosts = $user->viewedMatches;
@@ -575,7 +575,7 @@ class API{
 
                     // $matchings = $capsule->connection()->select($sql, [$lat, $lng, $post_id, $lat, $lng, $lat, $lng]);
                     
-                    $matchings = MatchingPost::where('post_to', $post_id)->where('state', '<>', 2)->orderBy('dist')->get();
+                    $matchings = MatchingPost::where('post_from', $post_id)->where('state', '<>', 2)->orderBy('dist')->get();
 
                     // $sql = "select posts.*, CoordinateDistanceKM(lat, lng, ?, ?) as dist from `posts` 
                     //      inner join `similarposts` 
@@ -588,7 +588,7 @@ class API{
 
                     // $similars = $capsule->connection()->select($sql, [$lat, $lng, $post_id, $lat, $lng, $lat, $lng]);
                     
-                    $similars = SimilarPost::where('post_to', $post_id)->orderBy('dist')->get();
+                    $similars = SimilarPost::where('post_from', $post_id)->orderBy('dist')->get();
 
 
                     $marray = array();
@@ -777,7 +777,7 @@ class API{
                     'message' => 'Invalid token',
                     );
             } else{
-                $mp = MatchingPost::where('post_to', $main_post_id)->where('post_from', $delete_post_id)->first();
+                $mp = MatchingPost::where('post_from', $main_post_id)->where('post_from', $delete_post_id)->first();
                 if ($mp == NULL){
                     $result = array(
                         'success' => 'false',

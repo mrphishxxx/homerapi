@@ -39,7 +39,7 @@ $f3->route('POST /user/rating/reply', 'API->reply_rating');
 $f3->route('GET /admin/login', 'API->admin_login');
 $f3->route('GET /admin/users', 'API->admin_get_users');
 $f3->route('GET /admin/users/@id', 'API->admin_get_user');
-$f3->route('DELETE /admin/users/@id', 'API->admin_get_users');
+$f3->route('DELETE /admin/users/@id', 'API->admin_delete_user');
 $f3->route('POST /admin/users/@id', 'API->admin_update_user');
 
 

@@ -1618,7 +1618,7 @@ class API{
             $result['success'] = 'false';
             $result['message'] = 'You are not authorized';
         } else{
-
+            $post_id = $params['id'];
             $post = Post::find($post_id);
             if ($post == NULL){
                 $result = array(
@@ -1650,7 +1650,7 @@ class API{
             $result['success'] = 'false';
             $result['message'] = 'You are not authorized';
         } else{
-
+            $post_id = $params['id'];
             $post = Post::find($post_id);
             if ($post == NULL){
                 $result = array(

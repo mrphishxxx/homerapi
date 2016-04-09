@@ -711,7 +711,7 @@ class API{
                     $devices = array();
                     $matchings = MatchingPost::where('post_from', $post_id)->where('state', '<>', 2)->get();
 
-                    foreach ($matching as $m){
+                    foreach ($matchings as $m){
                         $user = $m->user;
                         unset($devices);
                         $devices = array();

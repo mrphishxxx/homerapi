@@ -1678,7 +1678,11 @@ class API{
                     $post->lng = $r->results[0]->geometry->location->lng;
                 }
                 
+                $post->save();
 
+                $result['success'] = 'true';
+                $result['message'] = 'Updated';
+                
                 __process_post($post); // processes similar matches and finding matches
             }
         }

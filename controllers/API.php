@@ -777,7 +777,7 @@ class API{
                     'message' => 'Invalid token',
                     );
             } else{
-                $mp = MatchingPost::where('post_from', $main_post_id)->where('post_from', $delete_post_id)->first();
+                $mp = MatchingPost::where('post_from', $main_post_id)->where('post_to', $delete_post_id)->first();
                 if ($mp == NULL){
                     $result = array(
                         'success' => 'false',

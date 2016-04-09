@@ -56,7 +56,7 @@ $f3->route('POST /admin/posts/@id', 'API->admin_update_posts');
 
 
 $f3->set('CORS.origin', '*');
-$f3->set('CORS.headers', '*');
+$f3->set('CORS.headers', 'authorization');
 
 $f3->run();
 

@@ -712,13 +712,13 @@ class API{
                     $matchings = MatchingPost::where('post_from', $post_id)->where('state', '<>', 2)->get();
 
                     foreach ($matchings as $m){
-                        $user = $m->user;
+                        $u = $m->postTo->user;
                         unset($devices);
                         $devices = array();
-                        foreach ($user->logins as $login){
+                        foreach ($u->logins as $login){
                             if ($login->push_type == 2){
                                 if ($login->push_token == NULL || strlen($login->push_token) < 10){
-                                continue;
+                                    continue;
                                 }
                                 $devices[] = $login->push_token;
                             }

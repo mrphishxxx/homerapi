@@ -1597,7 +1597,7 @@ class API{
             $result['success'] = 'false';
             $result['message'] = 'You are not authorized';
         } else{
-
+            $id = $params['id'];
             $post = Post::with('user')->find($id);
             if ($post == NULL){
                 $result['success'] = 'false';

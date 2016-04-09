@@ -1455,6 +1455,7 @@ class API{
     }
 
     function admin_get_users(){
+        $token = $_SERVER['Authorization'];
         extract($_GET);
         $admin = __get_auth_admin($token);
         $result = array();
@@ -1485,6 +1486,7 @@ class API{
     }
 
     function admin_get_user($f3, $params){
+        $token = $_SERVER['Authorization'];
         $admin = __get_auth_admin($token);
         $result = array();
         if ($admin == NULL){
@@ -1506,6 +1508,7 @@ class API{
     }
 
     function admin_delete_user($f3, $params){
+        $token = $_SERVER['Authorization'];
         $admin = __get_auth_admin($token);
         $result = array();
         if ($admin == NULL){
@@ -1527,6 +1530,7 @@ class API{
     }
 
     function admin_update_user($f3, $params){
+        $token = $_SERVER['Authorization'];
         $admin = __get_auth_admin($token);
         $result = array();
         if ($admin == NULL){
@@ -1558,6 +1562,7 @@ class API{
     }
 
     function admin_get_posts(){
+        $token = $_SERVER['Authorization'];
         extract($_GET);
         $admin = __get_auth_admin($token);
         $result = array();
@@ -1585,6 +1590,7 @@ class API{
     }
 
     function admin_get_post($f3, $params){
+        $token = $_SERVER['Authorization'];
         $admin = __get_auth_admin($token);
         $result = array();
         if ($admin == NULL){
@@ -1605,6 +1611,7 @@ class API{
     }
 
     function admin_delete_post($f3, $params){
+        $token = $_SERVER['Authorization'];
         $admin = __get_auth_admin($token);
         $result = array();
         if ($admin == NULL){
@@ -1636,6 +1643,7 @@ class API{
     }
 
     function admin_update_post($f3, $params){
+        $token = $_SERVER['Authorization'];
         $admin = __get_auth_admin($token);
         $result = array();
         if ($admin == NULL){

@@ -1571,7 +1571,7 @@ class API{
             $result['message'] = 'You are not authorized';
         } else{
             $total = Post::count();
-            $posts = Post::whereNull('deleted_at');
+            $posts = Post::with('user')->whereNull('deleted_at');
             
             if (!isset($per)){
                 $per = 20;
@@ -1598,7 +1598,7 @@ class API{
             $result['message'] = 'You are not authorized';
         } else{
 
-            $post = Post::find($id);
+            $post = Post::with('user')->find($id);
             if ($post == NULL){
                 $result['success'] = 'false';
                 $result['message'] = 'No such post';

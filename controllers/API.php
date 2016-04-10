@@ -1552,6 +1552,15 @@ class API{
                 $user->phone = $phone;
                 $user->phone_verified = $phone_verified;
                 $user->creci_verified = $creci_verified;
+                
+                if ($creci != ''){
+                    $user->creci = $creci;
+                }
+
+                if ($avatar != ''){
+                    $user->avatar = $avatar;
+                }
+                
                 $user->save();
                 $result['success'] = 'true';
                 $result['message'] = 'Updated user';
@@ -1688,6 +1697,45 @@ class API{
         }
 
         echo json_encode($result);
+    }
+
+    function admin_file_upload($f3, $params){
+        extract($_POST);
+        $result = array();
+
+        $admin = __get_auth_admin($token);
+
+        if ($admin == NULL){
+            $result['success'] = 'false';
+            $result['message'] = 'You are not authorized';
+        } else{
+            if (isset($type)){
+                if ($type != 'avatar' && $type == 'creci'){
+                    $result['success'] = 'false';
+                    $result['message'] = 'Unknown image type.';
+                } else{
+                    $type .= 's';
+                    $uresult = upload($type);
+                    $result = array();
+                    if ($uresult['status'] == 0){
+                        $result['success'] = 'false';
+                        $result['message'] = $uresult['msg'];
+                    } else{
+                        $result = array(
+                            'success' => 'true',
+                            'message' => $uresult['msg'],
+                            'path' => $uresult['path'],
+                            );
+                    }
+                }
+            } else{
+                $result['success'] = 'false';
+                $result['message'] = 'Image type should be given.';
+            }
+        }
+
+        echo json_encode($result);
+
     }
 
 

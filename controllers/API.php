@@ -1703,6 +1703,8 @@ class API{
         extract($_POST);
         $result = array();
 
+        $token = $_SERVER['Authorization'];
+
         $admin = __get_auth_admin($token);
 
         if ($admin == NULL){

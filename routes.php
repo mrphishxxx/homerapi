@@ -50,7 +50,7 @@ $f3->route('GET /admin/posts/@id', 		'API->admin_get_post');
 $f3->route('DELETE /admin/posts/@id', 	'API->admin_delete_post');
 $f3->route('POST /admin/posts/@id', 	'API->admin_update_post');
 
-$f3->route('POST /images', 				'API->admin_file_upload');
+$f3->route('POST /admin/images', 				'API->admin_file_upload');
 
 
 

@@ -1712,7 +1712,7 @@ class API{
             $result['message'] = 'You are not authorized';
         } else{
             if (isset($type)){
-                if ($type != 'avatar' && $type == 'creci'){
+                if ($type != 'avatar' && $type != 'creci'){
                     $result['success'] = 'false';
                     $result['message'] = 'Unknown image type.';
                 } else{

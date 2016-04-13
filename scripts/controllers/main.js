@@ -1,1 +1,1 @@
-"use strict";angular.module("sbAdminApp").controller("MainCtrl",function($scope,$position,$location){});
+"use strict";angular.module("sbAdminApp").controller("MainCtrl",function($scope,$location){});

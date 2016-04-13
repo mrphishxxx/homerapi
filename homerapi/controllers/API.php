@@ -1467,6 +1467,7 @@ class API{
             $users = User::whereNull('deleted_at');
             if (isset($search)){
                 $users = $users->where('email', 'like', "%$search%")->orWhere('full_name', 'like', "%$search%")->orWhere('phone', 'like', '%' . $search . '%');
+                $total = $users->count();
             }
 
             if (!isset($per)){

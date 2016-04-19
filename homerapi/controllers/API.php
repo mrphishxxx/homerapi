@@ -369,6 +369,8 @@ class API{
                 $matchCnt = $matches->count();
                 $totalMatch += $matchCnt;
 
+                $hiddenCnt = MatchingPost::where('post_from', $post->id)->where('state', 2)->count();
+
                 $rpost = array(
                     'post_id' => $post->id,
                     'post_type' => $post->post_type,
@@ -388,7 +390,8 @@ class API{
                     'num_new_match' => $matches->whereNotIn('mid', $seenIds)->count(),
                     'num_match' => $matchCnt,
                     'created_at' => $post->created_at,
-                    'update_date' => $post->update_time
+                    'update_date' => $post->update_time,
+                    'hidden_cnt' => $hiddenCnt,
                     );
 
                 $rposts[] = $rpost;
@@ -441,6 +444,7 @@ class API{
                     }
                     $lat = $post->lat;
                     $lng = $post->lng;
+                    $hiddenCnt = MatchingPost::where('post_from', $post->id)->where('state', 2)->count();
 
                     // $sql = "select posts.*, CoordinateDistanceKM(lat, lng, ?, ?) as dist, matchingposts.mid as mid from `posts` 
                     //      inner join `matchingposts` 
@@ -513,7 +517,8 @@ class API{
                         'data' => array(
                             'matchings' => $marray,
                             'seealso' => $sarray,
-                            'num_new_match' => $numNewMatch
+                            'num_new_match' => $numNewMatch,
+                            'hidden_cnt' => $hiddenCnt,
                             ),
                         'post' => $post,
                         );

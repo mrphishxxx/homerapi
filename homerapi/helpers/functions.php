@@ -1,16 +1,19 @@
 <?php
 
 function __login($email, $pswd, $type, $dtoken){
-  $user = User::where('email', 'like', $email)->where('password', md5($pswd . $email))->first();
+  $user = User::where('email', 'like', $email)->first();
   if ($user != NULL){
-    Login::where('user_id', $user->id)->delete();
-    $login = new Login;
-    $login->push_type = $type;
-    $login->push_token = $dtoken;
-    $login->token = md5($email . date('Y-m-d'));
-    $user->logins()->save($login);
+    if ($user->password == md5($user->email . $pswd)){
+      Login::where('user_id', $user->id)->delete();
+      $login = new Login;
+      $login->push_type = $type;
+      $login->push_token = $dtoken;
+      $login->token = md5($email . date('Y-m-d'));
+      $user->logins()->save($login);
+      return $user;
+    }
   }
-  return $user;
+  return NULL;
 }
 
 function __login_facebook($full_name, $email, $type, $dtoken, $facebook_id){

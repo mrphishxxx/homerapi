@@ -3,7 +3,7 @@
 function __login($email, $pswd, $type, $dtoken){
   $user = User::where('email', 'like', $email)->first();
   if ($user != NULL){
-    if ($user->password == md5($user->email . $pswd)){
+    if ($user->password == md5($pswd . $user->email)){
       Login::where('user_id', $user->id)->delete();
       $login = new Login;
       $login->push_type = $type;

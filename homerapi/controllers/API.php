@@ -158,6 +158,7 @@ class API{
 
         if ($result === true){
             extract($_POST);
+            $result = array();
             if (__reserve_reset($email)){
                 $result['success'] = 'true';
                 $result['message'] = 'Password reset key has sent to the user';
@@ -186,6 +187,7 @@ class API{
         $result = validateParam($params);
 
         if ($result === true){
+            $result = array();
             extract($_POST);
             if (__password_reset($email, $code, $newpass)){
                 $user = __login($email, $newpass);

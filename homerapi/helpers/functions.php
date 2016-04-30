@@ -174,12 +174,13 @@ function __edit_post($uid, $post_id, $post_type, $property_type, $location, $num
   return $post;
 }
 
-function __rate_user($fromid, $toid, $score, $comment){
+function __rate_user($fromid, $toid, $score, $comment, $reason){
   $rating = new UserRating;
   $rating->user_from = $fromid;
   $rating->user_to = $toid;
   $rating->score = $score;
   $rating->comment = $comment;
+  $rating->reason = $reason;
   $rating->save();
 }
 

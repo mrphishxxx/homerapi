@@ -1024,7 +1024,7 @@ class API{
      * @apiParam {String} comment Comment
     */
     function rate_user(){
-        $params = ['agent_id', 'score', 'comment'];
+        $params = ['agent_id', 'score', 'comment', 'reason'];
         $result = validateParam($params);
 
         if ($result === true){
@@ -1053,13 +1053,13 @@ class API{
                         $rt = $tuser->ratings()->where('user_from', $user->id)->first();
                         if ($rt != NULL){
                             $rt->delete();
-                            __rate_user($user->id, $tuser->id, $score, $comment);
+                            __rate_user($user->id, $tuser->id, $score, $comment, $reason);
                             $result = array(
                                 'success' => 'true',
                                 'message' => "Your rating has been replaced."
                             );
                         } else{
-                            __rate_user($user->id, $tuser->id, $score, $comment);
+                            __rate_user($user->id, $tuser->id, $score, $comment, $reason);
                             $result = array(
                                 'success' => 'true',
                                 'message' => "Successfully rated",
@@ -1222,13 +1222,19 @@ class API{
                 'message' => 'Invalid token',
                 );
         } else{     
-            $uresult = upload('crecis');
+            $uresult = upload('crecis', 'creci_front');
+            $ubresult = upload('crecis', 'creci_back');
             $result = array();
             if ($uresult['status'] == 0){
                 $result['success'] = 'false';
                 $result['message'] = $uresult['msg'];
-            } else{
+            } else if ($ubresult['status'] == 0){
+                $result['success'] = 'false';
+                $result['message'] = $ubresult['msg'];
+            }
+             else{
                 $user->creci = $uresult['path'];
+                $user->creci_back = $ubresult['path'];
                 $user->creci_verified = 0;
                 $user->save();
                 $result = array(

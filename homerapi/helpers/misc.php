@@ -2,6 +2,7 @@
 
 use Sly\NotificationPusher\PushManager,
     Sly\NotificationPusher\Adapter\Gcm as GcmAdapter,
+	Sly\NotificationPusher\Adapter\Apns as ApnsAdapter,
     Sly\NotificationPusher\Collection\DeviceCollection,
     Sly\NotificationPusher\Model\Device,
     Sly\NotificationPusher\Model\Message,
@@ -341,6 +342,24 @@ function distance($lat1, $lon1, $lat2, $lon2, $unit) {
       }
 }
 
+function sendPush($logins, $content){
+	$ios_devs = array();
+	$droid_devs = array();
+	foreach ($logins as $login){
+		if ($login->push_token == NULL || strlen($login->push_token) < 10){
+        	continue;
+        }
+		if ($login->push_type == 1){
+			$ios_devs[] = $login->push_token;
+		} else if ($login->push_type == 2){
+			$droid_devs[] = $login->push_token;
+		}
+	}
+
+	sendGCMMessage($droid_devs, $content);
+	sendAPNMessage($ios_devs, $content);
+}
+
 function sendGCMMessage($registration_ids, $content)
 {
 
@@ -371,6 +390,28 @@ function sendGCMMessage($registration_ids, $content)
 		 // echo 'GCM error:'.curl_error($ch);
 	}
 	curl_close( $ch );
+
+}
+
+function sendAPNMessage($registration_ids, $content){
+	$pushManager = new PushManager(PushManager::ENVIRONMENT_DEV);
+	
+	$apnsAdapter = new ApnsAdapter(array(
+	    'certificate' => '/certs/apns-certificate.pem',
+	    'passPhrase' => 'apple',
+	));
+
+	$devices = new DeviceCollection($registration_ids);
+
+	$message = new Message($content['message'], array(
+
+	    'custom' => array('custom data' => $content)
+	));
+
+	// Finally, create and add the push to the manager, and push it!
+	$push = new Push($apnsAdapter, $devices, $message);
+	$pushManager->add($push);
+	$pushManager->push(); // Returns a collection of notified devices
 
 }
 

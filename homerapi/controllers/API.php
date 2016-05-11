@@ -722,14 +722,14 @@ class API{
                         $u = $m->postTo->user;
                         unset($devices);
                         $devices = array();
-                        foreach ($u->logins as $login){
-                            if ($login->push_type == 2){
-                                if ($login->push_token == NULL || strlen($login->push_token) < 10){
-                                    continue;
-                                }
-                                $devices[] = $login->push_token;
-                            }
-                        }
+                        // foreach ($u->logins as $login){
+                        //     if ($login->push_type == 2){
+                        //         if ($login->push_token == NULL || strlen($login->push_token) < 10){
+                        //             continue;
+                        //         }
+                        //         $devices[] = $login->push_token;
+                        //     }
+                        // }
                         
                         if (count($devices) == 0){
                           break;
@@ -740,7 +740,8 @@ class API{
                           'post_id' => $m->post_to,
                           'post_from' => $m->post_from,
                           );
-                        sendGCMMessage($devices, $message);
+                        // sendGCMMessage($devices, $message);
+                        sendPush($u->logins, $message);
 
                         $m->delete();
                     }
@@ -1068,18 +1069,23 @@ class API{
 
                         $devices = array();
 
-                        foreach ($tuser->logins as $login){
-                            if ($login->push_type == 2){
-                                if ($login->push_token == NULL || strlen($login->push_token) < 10){
-                                continue;
-                                }
-                                $devices[] = $login->push_token;
-                            }
-                        }
-                        if (count($devices) > 0){
+                        // foreach ($tuser->logins as $login){
+                        //     if ($login->push_type == 2){
+                        //         if ($login->push_token == NULL || strlen($login->push_token) < 10){
+                        //         continue;
+                        //         }
+                        //         $devices[] = $login->push_token;
+                        //     }
+                        // }
+                        // if (count($devices) > 0){
+                        if (count($tuser->logins) > 0){
                             $message = $user->full_name . ' has just rated you';
                             // sendGcmMessage($message, $devices);
-                            sendGCMMessage($devices, array(
+                            // sendGCMMessage($devices, array(
+                            //     'message' => $message,
+                            //     'agent_id' => $agent_id
+                            //     ));
+                            sendPush($u->logins, array(
                                 'message' => $message,
                                 'agent_id' => $agent_id
                                 ));
@@ -1132,19 +1138,24 @@ class API{
                         $rating->reply = $reply;
                         $rating->save();
                         
-                        foreach ($rating->userFrom->logins as $login){          // send notification to the user who rated this.
-                            if ($login->push_type == 2){
-                                if ($login->push_token == NULL || strlen($login->push_token) < 10){
-                                    continue;
-                                }
-                                $devices[] = $login->push_token;
-                            }
-                        }
+                        // foreach ($rating->userFrom->logins as $login){          // send notification to the user who rated this.
+                        //     if ($login->push_type == 2){
+                        //         if ($login->push_token == NULL || strlen($login->push_token) < 10){
+                        //             continue;
+                        //         }
+                        //         $devices[] = $login->push_token;
+                        //     }
+                        // }
 
-                        if (count($devices) > 0){
+                        // if (count($devices) > 0){
+                        if (count($rating->userFrom->logins) > 0){
                             $message = $user->full_name . ' has just replied to your rating';
                             // sendGcmMessage($message, $devices);
-                            sendGCMMessage($devices, array(
+                            // sendGCMMessage($devices, array(
+                            //     'message' => $message,
+                            //     'replier_id' => $user->id
+                            //     ));
+                            sendPush($rating->userForm->logins, array(
                                 'message' => $message,
                                 'replier_id' => $user->id
                                 ));

@@ -152,7 +152,9 @@ function __edit_post($uid, $post_id, $post_type, $property_type, $location, $num
 
   if ($post->post_type != $post_type){
     SimilarPost::where('post_from', $post->id)->delete();       // if post type had been changed, similar / matching relationship would have been broken.
+    SimilarPost::where('post_to', $post->id)->delete();
     MatchingPost::where('post_from', $post->id)->delete();
+    MatchingPost::where('post_to', $post->id)->delete();
   }
   
   $post->post_type = $post_type;
